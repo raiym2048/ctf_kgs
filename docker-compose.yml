@@ -1,0 +1,61 @@
+version: '3.8'
+networks:
+  app:
+volumes:
+  db-data:
+    driver: local
+
+services:
+  app:
+    image: untitled-app-1
+    build:
+      context: .
+    container_name: untitled-app-1
+    depends_on:
+      - flyway
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/elif_shop
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_DATASOURCE_DB: ctf_kgs
+    ports:
+      - '8081:8081'
+    networks:
+      - app
+
+  flyway:
+    image: boxfuse/flyway:latest-alpine
+    command: -url=jdbc:postgresql://postgres:5432/elif_shop -schemas=public -user=postgres -password=1234 migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1234
+    volumes:
+      - ./db/migration:/flyway/sql
+    networks:
+      - app
+
+  postgres:
+    domainname: postgres
+    build: ./db/migration
+    image: postgres:15.1-alpine
+    container_name: untitled-postgres-1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: elif_shop
+      POSTGRES_PORT: 5432  # Установите порт, который вы хотите
+
+    ports:
+      - "5434:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app
