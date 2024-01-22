@@ -14,7 +14,6 @@ public class FileMapperImpl implements FileMapper {
         fileResponse.setPath(fileData.getPath());
         fileResponse.setFileData(fileData.getFileData());
         fileResponse.setName(fileData.getName());
-        fileResponse.setUserId(fileData.getUser()!=null? fileData.getUser().getId(): null);
         fileResponse.setId(fileData.getId());
 
         return fileResponse;

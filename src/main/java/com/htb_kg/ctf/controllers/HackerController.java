@@ -1,5 +1,7 @@
 package com.htb_kg.ctf.controllers;
 
+import com.htb_kg.ctf.dto.event.JoinEvent;
+import com.htb_kg.ctf.dto.hacker.HackerAnswerTaskRequest;
 import com.htb_kg.ctf.dto.rank.RankingResponse;
 import com.htb_kg.ctf.dto.user.UserResponse;
 import com.htb_kg.ctf.service.HackerService;
@@ -17,9 +19,12 @@ public class HackerController {
 
     @PostMapping("/answer_task/{taskId}")
     public boolean answerToTheTask(@RequestHeader("Authorization") String token,
-                                   @RequestParam(required = false) String answer,
-                                   @PathVariable Long taskId){
-        return hackerService.answerToTask(token, answer, taskId);
+                                   @RequestBody HackerAnswerTaskRequest answer){
+        return hackerService.answerToTask(token, answer.getAnswer(), answer.getTaskId());
+    }
+    @PostMapping("/join/event")
+    public void joinToEvent(@RequestBody JoinEvent joinEvent, @RequestHeader("Authorization") String token){
+        hackerService.joinToEvent(joinEvent, token);
     }
 
     @GetMapping("/ranking")

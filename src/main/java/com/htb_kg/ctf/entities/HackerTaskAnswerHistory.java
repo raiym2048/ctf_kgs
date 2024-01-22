@@ -16,12 +16,11 @@ public class HackerTaskAnswerHistory {
     @Id
     private Long id;
 
-    @ManyToMany()
-    private List<Hacker> hacker;
+    @ManyToOne()
+    private Hacker hacker;
 
-    @ManyToMany
-    @JoinColumn(name = "task_id")
-    private List<Task> task;
+    @ManyToOne
+    private Task task;
 
     private String time;
 }

@@ -85,7 +85,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (optionalAuth.isEmpty()) {
             throw new NotFoundException("User not found with email or nickname: " + request.getEmailOrNickname(), HttpStatus.BAD_GATEWAY);
         }
-        if (optionalAuth.get().getCheckCode()!= -99)
+        if (optionalAuth.get().getCheckCode() == -99)
             throw new BadCredentialsException("the user do not access the code");
 
         User auth = optionalAuth.get();

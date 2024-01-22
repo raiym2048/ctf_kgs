@@ -35,7 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/webjars/**").permitAll()
-                .antMatchers("/job_seeker/**").permitAll()
+                .antMatchers("/jeopardy/**").authenticated()
                 .antMatchers("/category/**").permitAll()
                 .antMatchers("/admin/**").permitAll()
                 .antMatchers("/task/**").authenticated()

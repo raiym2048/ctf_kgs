@@ -32,9 +32,6 @@ public class Task {
 
     private String submitFlag;
 
-    @ManyToMany(mappedBy = "task", cascade = CascadeType.ALL)
-    private List<HackerTaskAnswerHistory> history;
-
     @ManyToMany()
     private List<Hacker> answeredHackers;
 

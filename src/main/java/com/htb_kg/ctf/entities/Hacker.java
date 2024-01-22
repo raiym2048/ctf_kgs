@@ -31,6 +31,4 @@ public class Hacker {
     @ManyToMany()
     private List<Task> answeredTasks;
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "hacker")
-    private List<HackerTaskAnswerHistory> history;
 }

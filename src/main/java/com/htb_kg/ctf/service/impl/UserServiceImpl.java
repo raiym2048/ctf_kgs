@@ -81,12 +81,10 @@ public class UserServiceImpl implements UserService {
             user.get().setToBusiness(false);
             Teacher teacher = new Teacher();
             teacher.setProof(user.get().getAccessToBusiness());
-            teacher.setUser(user.get());
             user.get().setTeacher(teacher);
             //hackerRepository.delete(user.get().getHacker());
             user.get().setHacker(null);
             user.get().setRole(Role.BUSINESS);
-            teacherRepository.save(teacher);
             userRepository.save(user.get());
         }
     }

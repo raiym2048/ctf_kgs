@@ -17,9 +17,6 @@ public class Teacher {
     @Id
     private Long id;
 
-    @OneToOne(mappedBy = "teacher")
-    private User user;
-
     @OneToOne(cascade = CascadeType.ALL)
     private FileData proof;
 }
