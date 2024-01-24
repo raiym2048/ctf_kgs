@@ -3,8 +3,8 @@ package com.htb_kg.ctf.service;
 import com.htb_kg.ctf.entities.FileData;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 
 public interface FileDataService {
     @Transactional

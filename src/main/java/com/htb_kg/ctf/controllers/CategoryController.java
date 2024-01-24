@@ -6,7 +6,7 @@ import com.htb_kg.ctf.service.CategoryService;
 import lombok.*;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 import java.util.List;
 
 

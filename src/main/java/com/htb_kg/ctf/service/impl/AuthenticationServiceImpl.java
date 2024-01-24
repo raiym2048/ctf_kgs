@@ -11,7 +11,7 @@ import com.htb_kg.ctf.enums.Role;
 import com.htb_kg.ctf.exception.BadCredentialsException;
 import com.htb_kg.ctf.mapper.FileMapper;
 import com.htb_kg.ctf.repositories.UserRepository;
-import com.htb_kg.ctf.security.JwtTokenProvider;
+import com.htb_kg.ctf.security.JwtService;
 import com.htb_kg.ctf.service.AuthenticationService;
 import com.htb_kg.ctf.service.FileDataService;
 import com.htb_kg.ctf.service.UserService;
@@ -30,6 +30,8 @@ import org.springframework.stereotype.Service;
 import com.htb_kg.ctf.exception.NotFoundException;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -39,7 +41,7 @@ import java.util.Random;
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final FileDataService fileDataService;
     private final FileMapper fileMapper;
@@ -103,8 +105,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new BadCredentialsException("Bad credentials");
         }
 
-        String token = jwtTokenProvider.createToken(auth.getEmail(), auth.getRole());
+        Map<String, Object> extraClaims = new HashMap<>();
 
+        String token = jwtService.generateToken(extraClaims, auth);
         return AuthenticationResponse.builder()
                 .user(convertToUserResponse(auth))
                 .accessToken(token)
@@ -181,8 +184,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         AuthenticationResponse response = new AuthenticationResponse();
 
         response.setUser(convertToUserResponse(user));
-        String token = jwtTokenProvider.createToken(user.getEmail(), userRepository.findByEmail(user.getEmail()).get().getRole());
-        response.setAccessToken(token);
+        Map<String, Object> extraClaims = new HashMap<>();
+
+        String token = jwtService.generateToken(extraClaims, user);        response.setAccessToken(token);
         return response;
     }
     private TeacherResponse convertToResponseTeacher(User user) {

@@ -3,7 +3,7 @@ package com.htb_kg.ctf.entities;
 import com.htb_kg.ctf.enums.Role;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.List;
 
 @AllArgsConstructor
@@ -23,6 +23,10 @@ public class Task {
     @ManyToOne()
     private Level level;
     private Integer userSolves;
+    @ManyToMany
+    private List<Hacker> likedHackers;
+
+
     @ManyToOne
     private Category category;
     private String releaseDate;
@@ -34,6 +38,9 @@ public class Task {
 
     @ManyToMany()
     private List<Hacker> answeredHackers;
+
+    @OneToMany()
+    private List<Hint> hints;
 
 
 }

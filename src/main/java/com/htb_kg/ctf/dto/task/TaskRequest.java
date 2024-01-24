@@ -2,6 +2,8 @@ package com.htb_kg.ctf.dto.task;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class TaskRequest {
     private Long oldTaskId;
@@ -14,5 +16,6 @@ public class TaskRequest {
     private String taskCreator;
     private Integer points;
     private String submitFlag;
+    private List<HintRequest> hintRequests;
 
 }

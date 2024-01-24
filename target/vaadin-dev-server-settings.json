@@ -1,0 +1,17 @@
+{
+  "frontendFolder": "/Users/bambook/Desktop/CTF_TEAM/Projects/Backend/Java/Untitled/./frontend",
+  "themeFolder": "themes",
+  "themeResourceFolder": "/Users/bambook/Desktop/CTF_TEAM/Projects/Backend/Java/Untitled/./frontend/generated/jar-resources",
+  "staticOutput": "/Users/bambook/Desktop/CTF_TEAM/Projects/Backend/Java/Untitled/target/classes/META-INF/VAADIN/webapp/VAADIN/static",
+  "generatedFolder": "generated",
+  "statsOutput": "/Users/bambook/Desktop/CTF_TEAM/Projects/Backend/Java/Untitled/target/classes/META-INF/VAADIN/config",
+  "frontendBundleOutput": "/Users/bambook/Desktop/CTF_TEAM/Projects/Backend/Java/Untitled/target/classes/META-INF/VAADIN/webapp",
+  "devBundleOutput": "/Users/bambook/Desktop/CTF_TEAM/Projects/Backend/Java/Untitled/target/dev-bundle/webapp",
+  "devBundleStatsOutput": "/Users/bambook/Desktop/CTF_TEAM/Projects/Backend/Java/Untitled/target/dev-bundle/config",
+  "jarResourcesFolder": "/Users/bambook/Desktop/CTF_TEAM/Projects/Backend/Java/Untitled/./frontend/generated/jar-resources",
+  "themeName": "",
+  "clientServiceWorkerSource": "/Users/bambook/Desktop/CTF_TEAM/Projects/Backend/Java/Untitled/target/sw.ts",
+  "pwaEnabled": false,
+  "offlineEnabled": false,
+  "offlinePath": "'offline.html'"
+}

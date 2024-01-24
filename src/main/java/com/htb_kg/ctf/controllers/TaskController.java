@@ -1,6 +1,8 @@
 package com.htb_kg.ctf.controllers;
 
 
+import com.htb_kg.ctf.dto.category.CategoryResponse;
+import com.htb_kg.ctf.dto.task.FilterRequest;
 import com.htb_kg.ctf.dto.task.TaskIdRequest;
 import com.htb_kg.ctf.dto.task.TaskRequest;
 import com.htb_kg.ctf.dto.task.TaskResponse;
@@ -17,10 +19,35 @@ import java.util.List;
 public class TaskController {
     private final TaskService taskService;
 
+    @GetMapping("/filter")
+    public List<TaskResponse> taskResponses(@RequestBody FilterRequest filterRequest, @RequestHeader("Authorization") String token){
+        return taskService.filter(filterRequest, token);
+    }
+
+    @PostMapping("/favorite/{taskId}")
+    public void saved(@PathVariable Long taskId, @RequestHeader("Authorization") String token){
+        taskService.favorite(taskId, token);
+    }
+
+    @GetMapping("/{taskId}")
+    public TaskResponse taskResponse(@PathVariable Long taskId, @RequestHeader("Authorization") String token){
+        return taskService.getById(taskId, token);
+    }
+
+    @PostMapping("/like/{taskId}")
+    public void likeTheTask(@PathVariable Long taskId, @RequestHeader("Authorization") String token){
+        taskService.likeTask(taskId, token);
+    }
+
     @PostMapping("/addTask")
     public void addTask(@RequestBody TaskRequest taskRequest, @RequestHeader("Authorization") String token){
 
         taskService.addTask(taskRequest, token);
+    }
+
+    @PostMapping("/open/hint/{id}")
+    public void openHint(@PathVariable Long id, @RequestHeader("Authorization") String token){
+        // todo
     }
 
     @PostMapping("/update/")

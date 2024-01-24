@@ -11,8 +11,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
+
+
+    List<Task> findAllByCategoryName(String categoryName);
+
     @Modifying
     @Query("UPDATE Task t SET t.name = :name, t.description = :description, t.points = :points, t.level = :level, t.userSolves = :userSolves, t.category = :category, t.releaseDate = :releaseDate, t.taskCreator = :taskCreator, t.submitFlag = :submitFlag WHERE t.id = :id")
     void updateTaskAttributes(

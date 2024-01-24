@@ -2,7 +2,7 @@ package com.htb_kg.ctf.entities;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.List;
 
 @NoArgsConstructor
@@ -27,6 +27,9 @@ public class Hacker {
 
     @OneToOne(mappedBy = "hacker")
     private User user;
+
+    @ManyToMany
+    private List<Task> favorites;
 
     @ManyToMany()
     private List<Task> answeredTasks;

@@ -9,4 +9,10 @@ import java.util.List;
 
 public interface TaskMapper {
     List<TaskResponse> toDtoS(List<Task> all, List<Task> answeredTasks);
+
+    TaskResponse toDto(Task task, Boolean b);
+
+    List<TaskResponse> toDtoS(List<Task> all);
+
+    TaskResponse toDto(Task task);
 }
