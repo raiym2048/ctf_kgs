@@ -35,8 +35,8 @@ public class TaskController {
     }
 
     @PostMapping("/like/{taskId}")
-    public void likeTheTask(@PathVariable Long taskId, @RequestHeader("Authorization") String token){
-        taskService.likeTask(taskId, token);
+    public void likeTheTask(@PathVariable Long taskId, @RequestHeader("Authorization") String token, Boolean like){
+        taskService.likeTask(taskId, token, like);
     }
 
     @PostMapping("/addTask")
@@ -46,8 +46,9 @@ public class TaskController {
     }
 
     @PostMapping("/open/hint/{id}")
-    public void openHint(@PathVariable Long id, @RequestHeader("Authorization") String token){
+    public String openHint(@PathVariable Long id, @RequestHeader("Authorization") String token){
         // todo
+        return taskService.openHint(id, token);
     }
 
     @PostMapping("/update/")

@@ -15,4 +15,5 @@ public class Hint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    private Boolean usable = true;
 }

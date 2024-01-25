@@ -22,5 +22,7 @@ public interface TaskService {
 
     TaskResponse getById(Long taskId, String token);
 
-    void likeTask(Long taskId, String token);
+    void likeTask(Long taskId, String token, Boolean like);
+
+    String openHint(Long id, String token);
 }

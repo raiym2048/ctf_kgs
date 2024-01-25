@@ -118,12 +118,12 @@ public class TaskServiceImpl implements TaskService {
         Optional<Task> task = taskRepository.findById(taskId);
         if (task.isEmpty())
             throw new NotFoundException("Task with id "+task+" is not exist!", HttpStatus.BAD_GATEWAY);
-        List<Task> answeredTasks = user.getHacker().getAnsweredTasks();
+        List<Task> answeredTasks = hacker.getAnsweredTasks();
         return taskMapper.toDto(task.get(), answeredTasks.contains(task.get()));
     }
 
     @Override
-    public void likeTask(Long taskId, String token) {
+    public void likeTask(Long taskId, String token, Boolean is_like) {
         User user = userService.getUsernameFromToken(token);
         if (!user.getRole().equals(Role.HACKER))
             throw new BadRequestException("only hacker can favorite!");
@@ -133,17 +133,46 @@ public class TaskServiceImpl implements TaskService {
             throw new NotFoundException("Task with id "+task+" is not exist!", HttpStatus.BAD_GATEWAY);
         List<Task> answeredTasks = user.getHacker().getAnsweredTasks();
         if (answeredTasks.contains(task.get())){
-            List<Hacker> likedHackers = new ArrayList<>();
-            if (!task.get().getLikedHackers().isEmpty()){
-                likedHackers = task.get().getLikedHackers();
+            if (is_like){
+                List<Hacker> likedHackers = new ArrayList<>();
+                if (!task.get().getLikedHackers().isEmpty()){
+                    likedHackers = task.get().getLikedHackers();
+                }
+                likedHackers.add(hacker);
+                task.get().setLikedHackers(likedHackers);
+
             }
-            likedHackers.add(hacker);
+            else {
+                List<Hacker> dislikedHackers = new ArrayList<>();
+                if (!task.get().getDislikedHackers().isEmpty()){
+                    dislikedHackers = task.get().getLikedHackers();
+                }
+                dislikedHackers.add(hacker);
+                task.get().setDislikedHackers(dislikedHackers);
+            }
+            taskRepository.save(task.get());
         }
         else {
             throw new BadRequestException("this hacker is already liked this task! taskId: "+taskId+", hackerid: "+hacker.getId());
         }
 
 
+    }
+
+    @Override
+    public String openHint(Long id, String token) {
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.HACKER))
+            throw new BadRequestException("only hacker can favorite!");
+        Hacker hacker = user.getHacker();
+        Optional<Hint> hint =  hintRepository.findById(id);
+        if (hint.isEmpty())
+            throw new BadRequestException("hint not found with id: "+id);
+        hint.get().setUsable(false);
+        hintRepository.save(hint.get());
+
+
+        return hint.get().getTitle();
     }
 
     private Task requestToEntity(TaskRequest taskRequest) {

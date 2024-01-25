@@ -3,7 +3,9 @@ package com.htb_kg.ctf.mapper.impl;
 import com.htb_kg.ctf.dto.task.TaskResponse;
 import com.htb_kg.ctf.entities.Task;
 import com.htb_kg.ctf.mapper.FileMapper;
+import com.htb_kg.ctf.mapper.HintMapper;
 import com.htb_kg.ctf.mapper.TaskMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,9 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@AllArgsConstructor
 public class TaskMapperImpl implements TaskMapper {
-    @Autowired
-    private FileMapper fileMapper;
+    private final FileMapper fileMapper;
+    private final HintMapper hintMapper;
 
     @Override
     public List<TaskResponse> toDtoS(List<Task> all, List<Task> answeredTasks) {
@@ -42,11 +45,14 @@ public class TaskMapperImpl implements TaskMapper {
         taskResponse.setReleaseDate(task.getReleaseDate());
         taskResponse.setSubmitFlag(task.getSubmitFlag());
         taskResponse.setUserSolves(task.getUserSolves());
+        taskResponse.setCountLike(task.getLikedHackers().size());
+        taskResponse.setCountDislike(task.getDislikedHackers().size());
 
         taskResponse.setCategoryName(task.getCategory()!=null? task.getCategory().getName():null);
         taskResponse.setLevelName(task.getLevel()!=null? task.getLevel().getName(): null);
         taskResponse.setDownloadFile(task.getDownloadFile()!=null?fileMapper.toDto(task.getDownloadFile()):null);
         taskResponse.setIsSolved(b);
+        taskResponse.setHintResponse(hintMapper.toResponses(task.getHints()));
 
 
         return taskResponse;
@@ -75,6 +81,9 @@ public class TaskMapperImpl implements TaskMapper {
         taskResponse.setReleaseDate(task.getReleaseDate());
         taskResponse.setSubmitFlag(task.getSubmitFlag());
         taskResponse.setUserSolves(task.getUserSolves());
+        taskResponse.setCountLike(task.getLikedHackers().size());
+        taskResponse.setCountDislike(task.getDislikedHackers().size());
+
 
         taskResponse.setCategoryName(task.getCategory()!=null? task.getCategory().getName():null);
         taskResponse.setLevelName(task.getLevel()!=null? task.getLevel().getName(): null);

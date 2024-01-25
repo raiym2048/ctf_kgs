@@ -27,6 +27,10 @@ public class Task {
     private List<Hacker> likedHackers;
 
 
+    @ManyToMany
+    private List<Hacker> dislikedHackers;
+
+
     @ManyToOne
     private Category category;
     private String releaseDate;
