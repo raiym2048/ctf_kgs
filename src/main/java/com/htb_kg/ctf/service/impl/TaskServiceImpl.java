@@ -62,9 +62,13 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskResponse> getAll(String token) {
         User user = userService.getUsernameFromToken(token);
         List<Task> answeredTasks = user.getHacker().getAnsweredTasks();
+        if (!user.getRole().equals(Role.HACKER))
+            throw new BadRequestException("only hacker can favorite!");
+        Hacker hacker = user.getHacker();
+
         System.out.println("the size:"+answeredTasks.size());
 
-        return taskMapper.toDtoS(taskRepository.findAll(), answeredTasks);
+        return taskMapper.toDtoS(taskRepository.findAll(), answeredTasks, hacker);
     }
 
     @Override
@@ -79,13 +83,16 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskResponse> filter(FilterRequest filterRequest, String token) {
         List<Task> tasks = taskRepository.findAllByCategoryName(filterRequest.getCategoryName());
         User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.HACKER))
+            throw new BadRequestException("only hacker can favorite!");
+        Hacker hacker = user.getHacker();
         List<Task> answeredTasks = user.getHacker().getAnsweredTasks();
         if (filterRequest.getHideSolved()){
             tasks.removeAll(answeredTasks);
-            return taskMapper.toDtoS(tasks);
+            return taskMapper.toDtoS(tasks,hacker );
         }
 
-        return taskMapper.toDtoS(tasks, answeredTasks);
+        return taskMapper.toDtoS(tasks, answeredTasks, hacker);
     }
 
     @Override
@@ -119,7 +126,11 @@ public class TaskServiceImpl implements TaskService {
         if (task.isEmpty())
             throw new NotFoundException("Task with id "+task+" is not exist!", HttpStatus.BAD_GATEWAY);
         List<Task> answeredTasks = hacker.getAnsweredTasks();
-        return taskMapper.toDto(task.get(), answeredTasks.contains(task.get()));
+        if (task.get().getLikedHackers().contains(hacker)){
+            return taskMapper.toDto(task.get(), answeredTasks.contains(task.get()),true );
+
+        }
+        return taskMapper.toDto(task.get(), answeredTasks.contains(task.get()),false );
     }
 
     @Override
