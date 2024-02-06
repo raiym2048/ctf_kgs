@@ -1,0 +1,47 @@
+
+alter table if exists category_tasks add constraint FKatxd3ttyrlobft4r2evo89448 foreign key (tasks_id) references task
+    ;alter table if exists category_tasks add constraint FKb6gvyshtqu24uwmioovl2ymas foreign key (category_id) references category
+    ;alter table if exists event add constraint FKb0njhs42klt8pm7k9lhp4w1xs foreign key (event_format_id) references event_format
+    ;alter table if exists event add constraint FK6esoabtbwawkgdx7wyx9sofr7 foreign key (event_status_id) references event_status
+    ;alter table if exists event add constraint FKgxoo7ftgbsrwr4i27wb9ylu1 foreign key (event_type_id) references event_type
+    ;alter table if exists event add constraint FKbb6c0h5nhs5og47iem617ehrl foreign key (location_id) references location
+    ;alter table if exists event add constraint FKsikoatv947rguilurkuq6l0qn foreign key (winner_id) references team
+    ;alter table if exists event_challenges add constraint FKi75y6t6vy4xt8k0cd5h6kbxkv foreign key (challenges_id) references task
+    ;alter table if exists event_challenges add constraint FKd9rdkc1jhe3j5acx5rmsuokjm foreign key (event_id) references event
+    ;alter table if exists event_joined_hackers add constraint FKq63ldm28xjm70lttl5wj19cy1 foreign key (joined_hackers_id) references hacker_table
+    ;alter table if exists event_joined_hackers add constraint FK7iujw9eqrf27lw4fljh4u4e7n foreign key (event_id) references event
+    ;alter table if exists event_joined_teams add constraint FKjcwnnyjffl19p5lt74w9ckffh foreign key (joined_teams_id) references team
+    ;alter table if exists event_joined_teams add constraint FKpvur52tcccr43a4cikevwyr2o foreign key (event_id) references event
+    ;alter table if exists hacker_table_answered_tasks add constraint FKprf7w5b5i051x1c6nkerkbkwv foreign key (answered_tasks_id) references task
+    ;alter table if exists hacker_table_answered_tasks add constraint FKebu5chi6ldjvmodypmurl3j9e foreign key (hacker_id) references hacker_table
+    ;alter table if exists hacker_table_favorites add constraint FKt65mhu1atmsmhab8v8aev2qb4 foreign key (favorites_id) references task
+    ;alter table if exists hacker_table_favorites add constraint FKeteyac8i4jj7i1h6lw8mji2yl foreign key (hacker_id) references hacker_table
+    ;alter table if exists hacker_task_answer_history add constraint FK22itnmyilksorl53rn7hry4dn foreign key (hacker_id) references hacker_table
+    ;alter table if exists hacker_task_answer_history add constraint FK8l10u2f6hvio2gwfyjhg1ksw foreign key (task_id) references task
+    ;alter table if exists jeopardy_tasks add constraint FKsq9su8crnrhy45455d4siwnd9 foreign key (tasks_id) references task
+    ;alter table if exists jeopardy_tasks add constraint FK2w5ng7x9i7bxuev0lbi4fhwog foreign key (jeopardy_id) references jeopardy
+    ;alter table if exists level_tasks add constraint FK8rd7oqb145wklgv343iyecmep foreign key (tasks_id) references task
+    ;alter table if exists level_tasks add constraint FK724a8tqt5dne33dpu5dvb7f0q foreign key (level_id) references level
+    ;alter table if exists task add constraint FKkjb4pwpo8oqc8fvkgbmiitsu9 foreign key (category_id) references category
+    ;alter table if exists task add constraint FK6uc5f4sqx7dbm8g19ud8qekab foreign key (download_file_id) references file_data
+    ;alter table if exists task add constraint FK3e0wdf51w2ty4p6u773spqsl foreign key (level_id) references level
+    ;alter table if exists task_answered_hackers add constraint FKua3xpofeysulnlg3vggmjeay foreign key (answered_hackers_id) references hacker_table
+    ;alter table if exists task_answered_hackers add constraint FKj6eyg483k4e6fgse0f2s6r3je foreign key (task_id) references task
+    ;alter table if exists task_disliked_hackers add constraint FKjvxm4g1m4xm9vqnivqvecbf4v foreign key (disliked_hackers_id) references hacker_table
+    ;alter table if exists task_disliked_hackers add constraint FKif5xcqd9cnn1draun32ts3t6g foreign key (task_id) references task
+    ;alter table if exists task_hints add constraint FKie4fgqwv0kumttxnx42qnnpgx foreign key (hints_id) references hint
+    ;alter table if exists task_hints add constraint FKaob4ffcb6u1u6fbt8ji155h32 foreign key (task_id) references task
+    ;alter table if exists task_liked_hackers add constraint FKmj0qg0hludhj11bbkm6kfi5e2 foreign key (liked_hackers_id) references hacker_table
+    ;alter table if exists task_liked_hackers add constraint FKjyjuo3pvsggqc8eoucuuui517 foreign key (task_id) references task
+    ;alter table if exists teacher_table add constraint FK2eow3nsbxmbo10qaidbs911a8 foreign key (proof_id) references file_data
+    ;alter table if exists team add constraint FKkhwmq9oht3xnh68n6dtquv725 foreign key (leader_id) references hacker_table
+    ;alter table if exists team add constraint FK1n2xmgo1v2x7tj4uayvmlmxmn foreign key (location_id) references location
+    ;alter table if exists team_members add constraint FK135j4k3908qs2r7oum3127utd foreign key (members_id) references hacker_table
+    ;alter table if exists team_members add constraint FKb3toat7ors5scfmd3n69dhmr1 foreign key (team_id) references team
+    ;alter table if exists team_past_events add constraint FK7fqcghk6x632jjq1d5ioyx0pm foreign key (past_events_id) references event
+    ;alter table if exists team_past_events add constraint FKdnl129mp8eeqoj3wpb4m3bfbk foreign key (team_id) references team
+    ;alter table if exists users_table add constraint FKkwhrmsvlqir4u9gdo9ow420yy foreign key (access_to_business_id) references file_data
+    ;alter table if exists users_table add constraint FKbsxdu6o0no1dle2t5dq6kh8tq foreign key (hacker_id) references hacker_table
+    ;alter table if exists users_table add constraint FKk3akakpqtsx604hk26rqpnxtt foreign key (logo_image_id) references file_data
+    ;alter table if exists users_table add constraint FKrlmjwi6oawgqmoakdrf587it9 foreign key (teacher_id) references teacher_table
+     ;

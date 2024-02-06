@@ -20,7 +20,7 @@ public class TaskResponse {
     private Integer points;
     private String submitFlag;
     private Boolean isSolved;
-    private Boolean isLiked;
+    private LikeResponse likeResponse;
     private Integer countLike;
     private Integer countDislike;
     private List<HintResponse> hintResponse;

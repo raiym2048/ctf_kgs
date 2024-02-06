@@ -2,10 +2,7 @@ package com.htb_kg.ctf.controllers;
 
 
 import com.htb_kg.ctf.dto.category.CategoryResponse;
-import com.htb_kg.ctf.dto.task.FilterRequest;
-import com.htb_kg.ctf.dto.task.TaskIdRequest;
-import com.htb_kg.ctf.dto.task.TaskRequest;
-import com.htb_kg.ctf.dto.task.TaskResponse;
+import com.htb_kg.ctf.dto.task.*;
 import com.htb_kg.ctf.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +20,14 @@ public class TaskController {
     public List<TaskResponse> taskResponses(@RequestBody FilterRequest filterRequest, @RequestHeader("Authorization") String token){
         return taskService.filter(filterRequest, token);
     }
+    @GetMapping("/search/by/category")
+    public List<TaskResponse> taskResponses(@RequestBody TaskCategoryNameSearchRequest request, @RequestHeader("Authorization") String token){
+        return taskService.byCategory(request, token);
+    }
 
     @PostMapping("/favorite/{taskId}")
-    public void saved(@PathVariable Long taskId, @RequestHeader("Authorization") String token){
-        taskService.favorite(taskId, token);
+    public Boolean saved(@PathVariable Long taskId, @RequestHeader("Authorization") String token){
+        return taskService.favorite(taskId, token);
     }
 
     @GetMapping("/{taskId}")
@@ -35,9 +36,15 @@ public class TaskController {
     }
 
     @PostMapping("/like/{taskId}")
-    public void likeTheTask(@PathVariable Long taskId, @RequestHeader("Authorization") String token, Boolean like){
-        taskService.likeTask(taskId, token, like);
+    public LikeResponse likeTheTask(@PathVariable Long taskId, @RequestHeader("Authorization") String token){
+        return taskService.likeTask(taskId, token);
     }
+
+    @PostMapping("/disLike/{taskId}")
+    public LikeResponse disLikeTheTask(@PathVariable Long taskId, @RequestHeader("Authorization") String token, Boolean like){
+        return taskService.disLikeTask(taskId, token);
+    }
+
 
     @PostMapping("/addTask")
     public void addTask(@RequestBody TaskRequest taskRequest, @RequestHeader("Authorization") String token){
@@ -47,7 +54,6 @@ public class TaskController {
 
     @PostMapping("/open/hint/{id}")
     public String openHint(@PathVariable Long id, @RequestHeader("Authorization") String token){
-        // todo
         return taskService.openHint(id, token);
     }
 

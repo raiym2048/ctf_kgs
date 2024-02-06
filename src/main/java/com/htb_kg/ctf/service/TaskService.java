@@ -1,9 +1,7 @@
 package com.htb_kg.ctf.service;
 
 import com.htb_kg.ctf.dto.category.CategoryResponse;
-import com.htb_kg.ctf.dto.task.FilterRequest;
-import com.htb_kg.ctf.dto.task.TaskRequest;
-import com.htb_kg.ctf.dto.task.TaskResponse;
+import com.htb_kg.ctf.dto.task.*;
 
 import java.util.List;
 
@@ -18,11 +16,14 @@ public interface TaskService {
 
     List<TaskResponse> filter(FilterRequest category, String token);
 
-    void favorite(Long taskId, String token);
+    Boolean favorite(Long taskId, String token);
 
     TaskResponse getById(Long taskId, String token);
 
-    void likeTask(Long taskId, String token, Boolean like);
+    LikeResponse likeTask(Long taskId, String token);
+    LikeResponse disLikeTask(Long taskId, String token);
 
     String openHint(Long id, String token);
+
+    List<TaskResponse> byCategory(TaskCategoryNameSearchRequest request, String token);
 }

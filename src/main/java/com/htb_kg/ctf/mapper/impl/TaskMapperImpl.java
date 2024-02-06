@@ -1,5 +1,6 @@
 package com.htb_kg.ctf.mapper.impl;
 
+import com.htb_kg.ctf.dto.task.LikeResponse;
 import com.htb_kg.ctf.dto.task.TaskResponse;
 import com.htb_kg.ctf.entities.Hacker;
 import com.htb_kg.ctf.entities.Task;
@@ -24,15 +25,25 @@ public class TaskMapperImpl implements TaskMapper {
         List<TaskResponse> taskResponses = new ArrayList<>();
 
         for (Task task: all){
-            Boolean like = false;
-            if (task.getLikedHackers().contains(hacker))
-                like = true;
+            LikeResponse likeResponse = new LikeResponse();
+            if (task.getLikedHackers().contains(hacker)){
+                likeResponse.setLike(true);
+                likeResponse.setDisLike(false);
+            } else if (task.getDislikedHackers().contains(hacker)) {
+                likeResponse.setLike(false);
+                likeResponse.setDisLike(true);
+            }
+            else {
+                likeResponse.setLike(false);
+                likeResponse.setDisLike(false);
+            }
+
             if (answeredTasks.contains(task)){
 
-                taskResponses.add(toDto(task, true, like));
+                taskResponses.add(toDto(task, true, likeResponse));
                 System.out.println("istrue");
             }else {
-                taskResponses.add(toDto(task, false, like));
+                taskResponses.add(toDto(task, false, likeResponse));
                 System.out.println("isfalse");
             }
         }
@@ -40,7 +51,7 @@ public class TaskMapperImpl implements TaskMapper {
     }
 
     @Override
-    public TaskResponse toDto(Task task, Boolean b, Boolean isLiked) {
+    public TaskResponse toDto(Task task, Boolean b, LikeResponse likeResponse) {
         TaskResponse taskResponse = new TaskResponse();
         taskResponse.setId(task.getId());
         taskResponse.setTaskCreator(task.getTaskCreator());
@@ -51,8 +62,8 @@ public class TaskMapperImpl implements TaskMapper {
         taskResponse.setSubmitFlag(task.getSubmitFlag());
         taskResponse.setUserSolves(task.getUserSolves());
         taskResponse.setCountLike(task.getLikedHackers().size());
+        taskResponse.setLikeResponse(likeResponse);
         taskResponse.setCountDislike(task.getDislikedHackers().size());
-        taskResponse.setIsLiked(isLiked);
         taskResponse.setCategoryName(task.getCategory()!=null? task.getCategory().getName():null);
         taskResponse.setLevelName(task.getLevel()!=null? task.getLevel().getName(): null);
         taskResponse.setDownloadFile(task.getDownloadFile()!=null?fileMapper.toDto(task.getDownloadFile()):null);
@@ -68,17 +79,27 @@ public class TaskMapperImpl implements TaskMapper {
         List<TaskResponse> taskResponses = new ArrayList<>();
 
         for (Task task: all){
-            Boolean like = false;
+            LikeResponse likeResponse = new LikeResponse();
+            if (task.getLikedHackers().contains(hacker)){
+                likeResponse.setLike(true);
+                likeResponse.setDisLike(false);
+            } else if (task.getDislikedHackers().contains(hacker)) {
+                likeResponse.setLike(false);
+                likeResponse.setDisLike(true);
+            }
+            else {
+                likeResponse.setLike(false);
+                likeResponse.setDisLike(false);
+            }
             if (task.getLikedHackers().contains(hacker))
-                like = true;
-                taskResponses.add(toDto(task, false, like));
+                taskResponses.add(toDto(task, false,likeResponse));
 
         }
         return taskResponses;
     }
 
     @Override
-    public TaskResponse toDto(Task task, Boolean isLiked) {
+    public TaskResponse toDto(Task task, LikeResponse likeResponse) {
         TaskResponse taskResponse = new TaskResponse();
         taskResponse.setId(task.getId());
         taskResponse.setTaskCreator(task.getTaskCreator());
@@ -90,7 +111,7 @@ public class TaskMapperImpl implements TaskMapper {
         taskResponse.setUserSolves(task.getUserSolves());
         taskResponse.setCountLike(task.getLikedHackers().size());
         taskResponse.setCountDislike(task.getDislikedHackers().size());
-        taskResponse.setIsLiked(isLiked);
+        taskResponse.setLikeResponse(likeResponse);
 
 
         taskResponse.setCategoryName(task.getCategory()!=null? task.getCategory().getName():null);

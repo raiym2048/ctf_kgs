@@ -1,10 +1,7 @@
 package com.htb_kg.ctf.service.impl;
 
 import com.htb_kg.ctf.dto.category.CategoryResponse;
-import com.htb_kg.ctf.dto.task.FilterRequest;
-import com.htb_kg.ctf.dto.task.HintRequest;
-import com.htb_kg.ctf.dto.task.TaskRequest;
-import com.htb_kg.ctf.dto.task.TaskResponse;
+import com.htb_kg.ctf.dto.task.*;
 import com.htb_kg.ctf.entities.*;
 import com.htb_kg.ctf.enums.Role;
 import com.htb_kg.ctf.exception.BadRequestException;
@@ -81,10 +78,10 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskResponse> filter(FilterRequest filterRequest, String token) {
-        List<Task> tasks = taskRepository.findAllByCategoryName(filterRequest.getCategoryName());
+        List<Task> tasks = taskRepository.findAll();
         User user = userService.getUsernameFromToken(token);
         if (!user.getRole().equals(Role.HACKER))
-            throw new BadRequestException("only hacker can favorite!");
+            throw new BadRequestException("only hacker can!");
         Hacker hacker = user.getHacker();
         List<Task> answeredTasks = user.getHacker().getAnsweredTasks();
         if (filterRequest.getHideSolved()){
@@ -96,7 +93,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void favorite(Long taskId, String token) {
+    public Boolean favorite(Long taskId, String token) {
         User user = userService.getUsernameFromToken(token);
         if (!user.getRole().equals(Role.HACKER))
             throw new BadRequestException("only hacker can favorite!");
@@ -108,12 +105,17 @@ public class TaskServiceImpl implements TaskService {
         List<Task> favorites = new ArrayList<>();
         if (!hacker.getFavorites().isEmpty()){
             favorites = hacker.getFavorites();
+            favorites.add(task.get());
+            hacker.setFavorites(favorites);
+            hackerRepository.save(hacker);
+            return true;
         }
-        if (favorites.contains(task.get()))
-            throw new BadRequestException("you have already favorite this task! taskId: "+ taskId+", hackerId: "+hacker.getId());
-        favorites.add(task.get());
-        hacker.setFavorites(favorites);
-        hackerRepository.save(hacker);
+        else {
+            favorites.remove(task.get());
+            hacker.setFavorites(favorites);
+            hackerRepository.save(hacker);
+            return false;
+        }
     }
 
     @Override
@@ -126,15 +128,24 @@ public class TaskServiceImpl implements TaskService {
         if (task.isEmpty())
             throw new NotFoundException("Task with id "+task+" is not exist!", HttpStatus.BAD_GATEWAY);
         List<Task> answeredTasks = hacker.getAnsweredTasks();
+        LikeResponse likeResponse = new LikeResponse();
         if (task.get().getLikedHackers().contains(hacker)){
-            return taskMapper.toDto(task.get(), answeredTasks.contains(task.get()),true );
-
+            likeResponse.setLike(true);
+            likeResponse.setDisLike(false);
+        } else if (task.get().getDislikedHackers().contains(hacker)) {
+            likeResponse.setLike(false);
+            likeResponse.setDisLike(true);
         }
-        return taskMapper.toDto(task.get(), answeredTasks.contains(task.get()),false );
+        else {
+            likeResponse.setLike(false);
+            likeResponse.setDisLike(false);
+        }
+
+        return taskMapper.toDto(task.get(), answeredTasks.contains(task.get()),likeResponse );
     }
 
     @Override
-    public void likeTask(Long taskId, String token, Boolean is_like) {
+    public LikeResponse likeTask(Long taskId, String token) {
         User user = userService.getUsernameFromToken(token);
         if (!user.getRole().equals(Role.HACKER))
             throw new BadRequestException("only hacker can favorite!");
@@ -142,31 +153,74 @@ public class TaskServiceImpl implements TaskService {
         Optional<Task> task = taskRepository.findById(taskId);
         if (task.isEmpty())
             throw new NotFoundException("Task with id "+task+" is not exist!", HttpStatus.BAD_GATEWAY);
-        List<Task> answeredTasks = user.getHacker().getAnsweredTasks();
-        if (answeredTasks.contains(task.get())){
-            if (is_like){
-                List<Hacker> likedHackers = new ArrayList<>();
-                if (!task.get().getLikedHackers().isEmpty()){
-                    likedHackers = task.get().getLikedHackers();
-                }
-                likedHackers.add(hacker);
-                task.get().setLikedHackers(likedHackers);
 
+
+        if (!task.get().getLikedHackers().contains(hacker)){
+            List<Hacker> likedHackers = new ArrayList<>();
+            if (!task.get().getLikedHackers().isEmpty()){
+                likedHackers = task.get().getLikedHackers();
             }
-            else {
-                List<Hacker> dislikedHackers = new ArrayList<>();
-                if (!task.get().getDislikedHackers().isEmpty()){
-                    dislikedHackers = task.get().getLikedHackers();
-                }
-                dislikedHackers.add(hacker);
-                task.get().setDislikedHackers(dislikedHackers);
+            likedHackers.add(hacker);
+            task.get().setLikedHackers(likedHackers);
+            if (task.get().getDislikedHackers().contains(hacker)){
+                task.get().getDislikedHackers().remove(hacker);
             }
+
             taskRepository.save(task.get());
+            LikeResponse likeResponse = new LikeResponse();
+            likeResponse.setLike(true);
+            likeResponse.setDisLike(false);
+            return likeResponse;
         }
         else {
-            throw new BadRequestException("this hacker is already liked this task! taskId: "+taskId+", hackerid: "+hacker.getId());
+            LikeResponse likeResponse = new LikeResponse();
+            likeResponse.setLike(false);
+            likeResponse.setDisLike(false);
         }
 
+
+        return null;
+
+    }
+    @Override
+    public LikeResponse disLikeTask(Long taskId, String token) {
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.HACKER))
+            throw new BadRequestException("only hacker can favorite!");
+        Hacker hacker = user.getHacker();
+        Optional<Task> task = taskRepository.findById(taskId);
+        if (task.isEmpty())
+            throw new NotFoundException("Task with id "+task+" is not exist!", HttpStatus.BAD_GATEWAY);
+
+
+        if (!task.get().getDislikedHackers().contains(hacker)){
+            List<Hacker> disLikedHackers = new ArrayList<>();
+            if (!task.get().getDislikedHackers().isEmpty()){
+                disLikedHackers = task.get().getLikedHackers();
+            }
+            disLikedHackers.add(hacker);
+            task.get().setLikedHackers(disLikedHackers);
+
+            if (task.get().getLikedHackers().contains(hacker)){
+                task.get().getLikedHackers().remove(hacker);
+            }
+
+            taskRepository.save(task.get());
+            LikeResponse likeResponse = new LikeResponse();
+            likeResponse.setLike(false);
+            likeResponse.setDisLike(true);
+
+
+            return likeResponse;
+        }
+        else {
+            LikeResponse likeResponse = new LikeResponse();
+            likeResponse.setLike(false);
+            likeResponse.setDisLike(false);
+        }
+
+
+        return null;
 
     }
 
@@ -184,6 +238,18 @@ public class TaskServiceImpl implements TaskService {
 
 
         return hint.get().getTitle();
+    }
+
+    @Override
+    public List<TaskResponse> byCategory(TaskCategoryNameSearchRequest request, String token) {
+        List<Task> tasks = taskRepository.findAllByCategoryName(request.getCategoryName());
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.HACKER))
+            throw new BadRequestException("only hacker can!");
+        Hacker hacker = user.getHacker();
+        List<Task> answeredTasks = user.getHacker().getAnsweredTasks();
+
+        return taskMapper.toDtoS(tasks, answeredTasks, hacker);
     }
 
     private Task requestToEntity(TaskRequest taskRequest) {

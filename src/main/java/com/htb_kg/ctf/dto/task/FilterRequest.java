@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FilterRequest {
-    private String categoryName;
     private Boolean hideSolved;
     private Boolean showBookMarked;
     private Boolean showAssigned;

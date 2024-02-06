@@ -1,5 +1,6 @@
 package com.htb_kg.ctf.mapper;
 
+import com.htb_kg.ctf.dto.task.LikeResponse;
 import com.htb_kg.ctf.dto.task.TaskRequest;
 import com.htb_kg.ctf.dto.task.TaskResponse;
 import com.htb_kg.ctf.entities.Hacker;
@@ -11,9 +12,9 @@ import java.util.List;
 public interface TaskMapper {
     List<TaskResponse> toDtoS(List<Task> all, List<Task> answeredTasks, Hacker hacker);
 
-    TaskResponse toDto(Task task, Boolean b, Boolean isLiked);
+    TaskResponse toDto(Task task, Boolean b, LikeResponse likeResponse);
 
     List<TaskResponse> toDtoS(List<Task> all, Hacker hacker);
 
-    TaskResponse toDto(Task task, Boolean isLiked);
+    TaskResponse toDto(Task task, LikeResponse likeResponse);
 }
