@@ -252,6 +252,18 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.toDtoS(tasks, answeredTasks, hacker);
     }
 
+    @Override
+    public List<TaskResponse> search(SearchRequest searchRequest, String token) {
+        List<Task> tasks = taskRepository.findAllByName(searchRequest.getName());
+        User user = userService.getUsernameFromToken(token);
+        Hacker hacker = user.getHacker();
+        List<Task> answeredTasks = user.getHacker().getAnsweredTasks();
+        if (user.getRole().equals(Role.HACKER)){
+            return taskMapper.toDtoS(tasks, answeredTasks, hacker);
+        }
+        return null;
+    }
+
     private Task requestToEntity(TaskRequest taskRequest) {
         Task task = new Task();
         task.setName(taskRequest.getName());

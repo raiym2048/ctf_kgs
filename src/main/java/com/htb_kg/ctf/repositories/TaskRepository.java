@@ -15,6 +15,7 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
+    List<Task> findAllByName(String name);
 
 
     List<Task> findAllByCategoryName(String categoryName);

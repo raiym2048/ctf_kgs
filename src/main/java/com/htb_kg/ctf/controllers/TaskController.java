@@ -16,6 +16,11 @@ import java.util.List;
 public class TaskController {
     private final TaskService taskService;
 
+    @GetMapping("/search")
+    public List<TaskResponse> taskResponses(@RequestBody SearchRequest searchRequest, @RequestHeader("Authorization") String token){
+        return taskService.search(searchRequest, token);
+    }
+
     @GetMapping("/filter")
     public List<TaskResponse> taskResponses(@RequestBody FilterRequest filterRequest, @RequestHeader("Authorization") String token){
         return taskService.filter(filterRequest, token);

@@ -26,4 +26,6 @@ public interface TaskService {
     String openHint(Long id, String token);
 
     List<TaskResponse> byCategory(TaskCategoryNameSearchRequest request, String token);
+
+    List<TaskResponse> search(SearchRequest searchRequest, String token);
 }
