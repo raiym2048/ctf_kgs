@@ -4,4 +4,4 @@ insert into hint (usable, title) values
                                      (false, 'title6'),
                                      (false, 'title7'),
                                      (false, 'title8'),
-                                     (false, 'title9');;
+                                     (false, 'title9');

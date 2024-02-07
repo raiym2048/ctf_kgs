@@ -73,13 +73,13 @@ public class TaskMapperImpl implements TaskMapper {
         taskResponse.setLevelName(task.getLevel()!=null? task.getLevel().getName(): null);
         taskResponse.setDownloadFile(task.getDownloadFile()!=null?fileMapper.toDto(task.getDownloadFile()):null);
         taskResponse.setIsSolved(b);
-        taskResponse.setHintResponse(hintMapper.toResponses(task.getHints()));
-        if (task.getHints()!=null){
-            if (!task.getHints().isEmpty()){
-                taskResponse.setHintText(task.getHints().get(0).getTitle());
-
-            }
-        }
+//        taskResponse.setHintResponse(hintMapper.toResponses(task.getHints()));
+//        if (task.getHints()!=null){
+//            if (!task.getHints().isEmpty()){
+//                taskResponse.setHintText(task.getHints().get(0).getTitle());
+//
+//            }
+//        }
         taskResponse.setOnFavorite(onFavorite);
 
 

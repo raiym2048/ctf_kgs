@@ -21,11 +21,13 @@ create table category (id bigserial not null, name varchar(255), primary key (id
     ;create table task (points integer, user_solves integer, category_id bigint, download_file_id bigint unique, id bigserial not null, level_id bigint, description varchar(255), name varchar(255), release_date varchar(255), submit_flag varchar(255), task_creator varchar(255), primary key (id))
     ;create table task_answered_hackers (answered_hackers_id bigint not null, task_id bigint not null)
     ;create table task_disliked_hackers (disliked_hackers_id bigint not null, task_id bigint not null)
-    ;create table task_hints (hints_id bigint not null unique, task_id bigint not null)
+    ;create table task_hints (id bigint primary key ,hints_id bigint not null, task_id bigint not null,
+    hacker_id bigint, is_usable boolean, used_time varchar(20))
     ;create table task_liked_hackers (liked_hackers_id bigint not null, task_id bigint not null)
     ;create table teacher_table (id bigserial not null, proof_id bigint unique, primary key (id))
     ;create table team (id bigserial not null, leader_id bigint unique, location_id bigint unique, team_points bigint, created_date varchar(255), description varchar(255), title varchar(255), primary key (id))
     ;create table team_members (members_id bigint not null unique, team_id bigint not null)
     ;create table team_past_events (past_events_id bigint not null, team_id bigint not null)
     ;create table users_table (check_code integer, refresh_code integer, to_business boolean, access_to_business_id bigint unique, hacker_id bigint unique, id bigserial not null, logo_image_id bigint unique, teacher_id bigint unique, business_file_sent_date varchar(255), creation_date varchar(255), email varchar(255), nickname varchar(255), password varchar(255), role varchar(255) check (role in ('HACKER','ADMIN','BUSINESS')), primary key (id))
-     ;
+    ;
+

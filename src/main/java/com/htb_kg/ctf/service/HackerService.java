@@ -13,5 +13,5 @@ public interface HackerService {
 
     void joinToEvent(JoinEvent joinEvent, String token);
 
-    void update(HackerUpdateRequest request);
+    void update(HackerUpdateRequest request, String token);
 }

@@ -11,6 +11,7 @@ import com.htb_kg.ctf.mapper.UserMapper;
 import com.htb_kg.ctf.repositories.HackerRepository;
 import com.htb_kg.ctf.repositories.TaskHackerHistoryRepository;
 import com.htb_kg.ctf.repositories.TaskRepository;
+import com.htb_kg.ctf.repositories.UserRepository;
 import com.htb_kg.ctf.repositories.event.EventRepository;
 import com.htb_kg.ctf.service.HackerService;
 import com.htb_kg.ctf.service.UserService;
@@ -32,6 +33,7 @@ public class HackerServiceImpl implements HackerService {
     private final HackerRepository hackerRepository;
     private final UserMapper userMapper;
     private final EventRepository eventRepository;
+    private final UserRepository userRepository;
     @Override
     public boolean answerToTask(String token, String answer, Long taskId) {
         Optional<Task> task = taskRepository.findById(taskId);
@@ -102,7 +104,14 @@ public class HackerServiceImpl implements HackerService {
     }
 
     @Override
-    public void update(HackerUpdateRequest request) {
+    public void update(HackerUpdateRequest request, String token) {
+        User user = userService.getUsernameFromToken(token);
+        if (!userRepository.findByEmailAndNickname(request.getUsername(), request.getUsername()).isEmpty()){
+            throw new BadRequestException("this nickname is busy");
+        }
+        user.setNickname(request.getUsername());
+        userRepository.save(user);
+
 
     }
 }

@@ -35,7 +35,7 @@ public class HackerController {
     }
 
     @PutMapping("/update")
-    public void updateHacker(@RequestBody HackerUpdateRequest request){
-        hackerService.update(request);
+    public void updateHacker(@RequestBody HackerUpdateRequest request, @RequestHeader("Authorization") String token){
+        hackerService.update(request, token);
     }
 }

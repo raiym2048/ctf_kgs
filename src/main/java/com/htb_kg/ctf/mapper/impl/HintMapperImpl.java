@@ -23,7 +23,7 @@ public class HintMapperImpl implements HintMapper {
         HintResponse hintResponse = new HintResponse();
         hintResponse.setId(hint.getId());
         hintResponse.setHint(hint.getTitle());
-        hintResponse.setUsable(hint.getUsable());
+       // hintResponse.setUsable(hint.getUsable());
         return hintResponse;
     }
 }

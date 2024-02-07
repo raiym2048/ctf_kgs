@@ -247,7 +247,7 @@ public class TaskServiceImpl implements TaskService {
         Optional<Hint> hint =  hintRepository.findById(id);
         if (hint.isEmpty())
             throw new BadRequestException("hint not found with id: "+id);
-        hint.get().setUsable(false);
+       // hint.get().setUsable(false);
         hintRepository.save(hint.get());
 
 
@@ -296,7 +296,7 @@ public class TaskServiceImpl implements TaskService {
         task.setUserSolves(taskRequest.getUserSolves());
         task.setLevel(!taskRequest.getLevelName().isBlank()? levelService.findByName(taskRequest.getLevelName()):null);
         task.setCategory(!taskRequest.getCategoryName().isEmpty()? categoryService.findByName(taskRequest.getCategoryName()):null);
-        task.setHints(toSaveHints(taskRequest.getHintRequests()));
+       // task.setHints(toSaveHints(taskRequest.getHintRequests()));
 
         return task;
     }
