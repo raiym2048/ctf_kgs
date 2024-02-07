@@ -148,8 +148,14 @@ public class TaskServiceImpl implements TaskService {
             likeResponse.setLike(false);
             likeResponse.setDisLike(false);
         }
+        if (hacker.getFavorites().contains(task.get())){
+            return taskMapper.toDto(task.get(), answeredTasks.contains(task.get()),likeResponse, true );
 
-        return taskMapper.toDto(task.get(), answeredTasks.contains(task.get()),likeResponse );
+
+        }
+
+
+        return taskMapper.toDto(task.get(), answeredTasks.contains(task.get()),likeResponse, false );
     }
 
     @Override

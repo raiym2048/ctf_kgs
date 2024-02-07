@@ -25,5 +25,6 @@ public class TaskResponse {
     private Integer countDislike;
     private String hintText;
     private List<HintResponse> hintResponse;
+    private Boolean onFavorite;
 
 }

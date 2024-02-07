@@ -23,8 +23,12 @@ public class TaskMapperImpl implements TaskMapper {
     @Override
     public List<TaskResponse> toDtoS(List<Task> all, List<Task> answeredTasks, Hacker hacker) {
         List<TaskResponse> taskResponses = new ArrayList<>();
+        Boolean onFavorite = false;
+
 
         for (Task task: all){
+            if (hacker.getFavorites().contains(task))
+                onFavorite = true;
             LikeResponse likeResponse = new LikeResponse();
             if (task.getLikedHackers().contains(hacker)){
                 likeResponse.setLike(true);
@@ -40,10 +44,11 @@ public class TaskMapperImpl implements TaskMapper {
 
             if (answeredTasks.contains(task)){
 
-                taskResponses.add(toDto(task, true, likeResponse));
+
+                taskResponses.add(toDto(task, true, likeResponse, onFavorite));
                 System.out.println("istrue");
             }else {
-                taskResponses.add(toDto(task, false, likeResponse));
+                taskResponses.add(toDto(task, false, likeResponse, onFavorite));
                 System.out.println("isfalse");
             }
         }
@@ -51,7 +56,7 @@ public class TaskMapperImpl implements TaskMapper {
     }
 
     @Override
-    public TaskResponse toDto(Task task, Boolean b, LikeResponse likeResponse) {
+    public TaskResponse toDto(Task task, Boolean b, LikeResponse likeResponse, Boolean onFavorite) {
         TaskResponse taskResponse = new TaskResponse();
         taskResponse.setId(task.getId());
         taskResponse.setTaskCreator(task.getTaskCreator());
@@ -75,6 +80,7 @@ public class TaskMapperImpl implements TaskMapper {
 
             }
         }
+        taskResponse.setOnFavorite(onFavorite);
 
 
         return taskResponse;
@@ -97,8 +103,16 @@ public class TaskMapperImpl implements TaskMapper {
                 likeResponse.setLike(false);
                 likeResponse.setDisLike(false);
             }
-            if (task.getLikedHackers().contains(hacker))
-                taskResponses.add(toDto(task, false,likeResponse));
+            if (task.getLikedHackers().contains(hacker)){
+                if (hacker.getFavorites().contains(task)){
+                    taskResponses.add(toDto(task, false,likeResponse, true));
+                }
+                else {
+                    taskResponses.add(toDto(task, false,likeResponse, false));
+
+                }
+
+            }
 
         }
         return taskResponses;

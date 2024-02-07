@@ -12,7 +12,7 @@ import java.util.List;
 public interface TaskMapper {
     List<TaskResponse> toDtoS(List<Task> all, List<Task> answeredTasks, Hacker hacker);
 
-    TaskResponse toDto(Task task, Boolean b, LikeResponse likeResponse);
+    TaskResponse toDto(Task task, Boolean b, LikeResponse likeResponse, Boolean b2);
 
     List<TaskResponse> toDtoS(List<Task> all, Hacker hacker);
 
