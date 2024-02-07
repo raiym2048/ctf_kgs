@@ -69,6 +69,12 @@ public class TaskMapperImpl implements TaskMapper {
         taskResponse.setDownloadFile(task.getDownloadFile()!=null?fileMapper.toDto(task.getDownloadFile()):null);
         taskResponse.setIsSolved(b);
         taskResponse.setHintResponse(hintMapper.toResponses(task.getHints()));
+        if (task.getHints()!=null){
+            if (!task.getHints().isEmpty()){
+                taskResponse.setHintText(task.getHints().get(0).getTitle());
+
+            }
+        }
 
 
         return taskResponse;

@@ -21,6 +21,7 @@ public class HintMapperImpl implements HintMapper {
     @Override
     public HintResponse toResponse(Hint hint) {
         HintResponse hintResponse = new HintResponse();
+        hintResponse.setId(hint.getId());
         hintResponse.setHint(hint.getTitle());
         hintResponse.setUsable(hint.getUsable());
         return hintResponse;

@@ -1,6 +1,7 @@
 package com.htb_kg.ctf.service.impl;
 
 import com.htb_kg.ctf.dto.event.JoinEvent;
+import com.htb_kg.ctf.dto.hacker.HackerUpdateRequest;
 import com.htb_kg.ctf.dto.rank.RankingResponse;
 import com.htb_kg.ctf.entities.*;
 import com.htb_kg.ctf.enums.Role;
@@ -97,6 +98,11 @@ public class HackerServiceImpl implements HackerService {
         hackers.add(hacker);
         event.setJoinedHackers(hackers);
         eventRepository.save(event);
+
+    }
+
+    @Override
+    public void update(HackerUpdateRequest request) {
 
     }
 }

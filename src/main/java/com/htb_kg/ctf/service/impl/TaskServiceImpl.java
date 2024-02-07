@@ -105,16 +105,24 @@ public class TaskServiceImpl implements TaskService {
         List<Task> favorites = new ArrayList<>();
         if (!hacker.getFavorites().isEmpty()){
             favorites = hacker.getFavorites();
+            if (!hacker.getFavorites().contains(task.get())){
+                favorites.add(task.get());
+                hacker.setFavorites(favorites);
+                hackerRepository.save(hacker);
+                return true;
+            }else {
+                favorites.remove(task.get());
+                hacker.setFavorites(favorites);
+                hackerRepository.save(hacker);
+                return false;
+            }
+
+        }
+        else {
             favorites.add(task.get());
             hacker.setFavorites(favorites);
             hackerRepository.save(hacker);
             return true;
-        }
-        else {
-            favorites.remove(task.get());
-            hacker.setFavorites(favorites);
-            hackerRepository.save(hacker);
-            return false;
         }
     }
 

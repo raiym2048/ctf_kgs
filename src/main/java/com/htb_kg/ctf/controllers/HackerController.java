@@ -2,6 +2,8 @@ package com.htb_kg.ctf.controllers;
 
 import com.htb_kg.ctf.dto.event.JoinEvent;
 import com.htb_kg.ctf.dto.hacker.HackerAnswerTaskRequest;
+import com.htb_kg.ctf.dto.hacker.HackerResponse;
+import com.htb_kg.ctf.dto.hacker.HackerUpdateRequest;
 import com.htb_kg.ctf.dto.rank.RankingResponse;
 import com.htb_kg.ctf.dto.user.UserResponse;
 import com.htb_kg.ctf.service.HackerService;
@@ -30,5 +32,10 @@ public class HackerController {
     @GetMapping("/ranking")
     public List<RankingResponse> ranking(){
         return hackerService.taskRanking();
+    }
+
+    @PutMapping("/update")
+    public void updateHacker(@RequestBody HackerUpdateRequest request){
+        hackerService.update(request);
     }
 }

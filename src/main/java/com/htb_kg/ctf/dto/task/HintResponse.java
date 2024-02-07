@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class HintResponse {
+    private Long id;
     private String hint;
     private Boolean usable;
 }

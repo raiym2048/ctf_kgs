@@ -23,6 +23,7 @@ public class TaskResponse {
     private LikeResponse likeResponse;
     private Integer countLike;
     private Integer countDislike;
+    private String hintText;
     private List<HintResponse> hintResponse;
 
 }
