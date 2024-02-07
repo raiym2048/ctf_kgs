@@ -17,16 +17,18 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping("/search")
-    public List<TaskResponse> taskResponses(@RequestBody SearchRequest searchRequest, @RequestHeader("Authorization") String token){
+    public List<TaskResponse> taskResponses2(@RequestParam(required = false) String searchRequest, @RequestHeader("Authorization") String token){
         return taskService.search(searchRequest, token);
     }
 
     @GetMapping("/filter")
-    public List<TaskResponse> taskResponses(@RequestBody FilterRequest filterRequest, @RequestHeader("Authorization") String token){
-        return taskService.filter(filterRequest, token);
+    public List<TaskResponse> taskResponses(@RequestParam(required = false) Boolean s1,
+                                            @RequestParam(required = false) Boolean s2,
+                                            @RequestParam(required = false) Boolean s3, @RequestHeader("Authorization") String token){
+        return taskService.filter(s1, s2,s3, token);
     }
     @GetMapping("/search/by/category")
-    public List<TaskResponse> taskResponses(@RequestParam(required = false) String request, @RequestHeader("Authorization") String token){
+    public List<TaskResponse> taskResponses1(@RequestParam(required = false) String request, @RequestHeader("Authorization") String token){
         return taskService.byCategory(request, token);
     }
 

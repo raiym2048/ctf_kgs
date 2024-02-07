@@ -77,14 +77,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskResponse> filter(FilterRequest filterRequest, String token) {
+    public List<TaskResponse> filter(Boolean s1, Boolean s2, Boolean s3, String token) {
         List<Task> tasks = taskRepository.findAll();
         User user = userService.getUsernameFromToken(token);
         if (!user.getRole().equals(Role.HACKER))
             throw new BadRequestException("only hacker can!");
         Hacker hacker = user.getHacker();
         List<Task> answeredTasks = user.getHacker().getAnsweredTasks();
-        if (filterRequest.getHideSolved()){
+        if (s1){
             tasks.removeAll(answeredTasks);
             return taskMapper.toDtoS(tasks,hacker );
         }
@@ -261,8 +261,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskResponse> search(SearchRequest searchRequest, String token) {
-        List<Task> tasks = taskRepository.findAllByName(searchRequest.getName());
+    public List<TaskResponse> search(String searchRequest, String token) {
+        List<Task> tasks = taskRepository.findAllByName(searchRequest);
         User user = userService.getUsernameFromToken(token);
         Hacker hacker = user.getHacker();
         List<Task> answeredTasks = user.getHacker().getAnsweredTasks();

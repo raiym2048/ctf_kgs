@@ -14,7 +14,7 @@ public interface TaskService {
 
     void deleteById(Long id);
 
-    List<TaskResponse> filter(FilterRequest category, String token);
+    List<TaskResponse> filter(Boolean s1,Boolean s2, Boolean s3,  String token);
 
     Boolean favorite(Long taskId, String token);
 
@@ -27,5 +27,5 @@ public interface TaskService {
 
     List<TaskResponse> byCategory(String request, String token);
 
-    List<TaskResponse> search(SearchRequest searchRequest, String token);
+    List<TaskResponse> search(String searchRequest, String token);
 }
