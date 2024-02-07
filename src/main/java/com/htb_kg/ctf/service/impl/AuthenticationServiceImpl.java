@@ -55,6 +55,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (request.getEmail().contains("@")) {
             user.setEmail(request.getEmail());
         }
+        else {
+            throw new BadCredentialsException("use @!");
+        }
         if (request.getPassword() != null) {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
         }
