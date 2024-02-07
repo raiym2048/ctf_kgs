@@ -268,7 +268,14 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskResponse> search(String searchRequest, String token) {
-        List<Task> tasks = taskRepository.findAllByName(searchRequest);
+        List<Task> tasks = new ArrayList<>();
+        if (!searchRequest.isEmpty()){
+            taskRepository.findAll();
+        }
+        else {
+            taskRepository.findAllByName(searchRequest);
+
+        }
         User user = userService.getUsernameFromToken(token);
         Hacker hacker = user.getHacker();
         List<Task> answeredTasks = user.getHacker().getAnsweredTasks();
