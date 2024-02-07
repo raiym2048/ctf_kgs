@@ -2,6 +2,7 @@ package com.htb_kg.ctf.controllers;
 
 import com.htb_kg.ctf.dto.event.JoinEvent;
 import com.htb_kg.ctf.dto.hacker.HackerAnswerTaskRequest;
+import com.htb_kg.ctf.dto.hacker.HackerProfileResponse;
 import com.htb_kg.ctf.dto.hacker.HackerResponse;
 import com.htb_kg.ctf.dto.hacker.HackerUpdateRequest;
 import com.htb_kg.ctf.dto.rank.RankingResponse;
@@ -18,6 +19,11 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class HackerController {
     private final HackerService hackerService;
+
+    @GetMapping("/byId")
+    public HackerProfileResponse hackerResponse(@RequestHeader("Authorization") String token){
+        return hackerService.getById(token);
+    }
 
     @PostMapping("/answer_task/{taskId}")
     public boolean answerToTheTask(@RequestHeader("Authorization") String token,

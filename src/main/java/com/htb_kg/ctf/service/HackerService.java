@@ -1,6 +1,8 @@
 package com.htb_kg.ctf.service;
 
 import com.htb_kg.ctf.dto.event.JoinEvent;
+import com.htb_kg.ctf.dto.hacker.HackerProfileResponse;
+import com.htb_kg.ctf.dto.hacker.HackerResponse;
 import com.htb_kg.ctf.dto.hacker.HackerUpdateRequest;
 import com.htb_kg.ctf.dto.rank.RankingResponse;
 
@@ -14,4 +16,6 @@ public interface HackerService {
     void joinToEvent(JoinEvent joinEvent, String token);
 
     void update(HackerUpdateRequest request, String token);
+
+    HackerProfileResponse getById(String token);
 }

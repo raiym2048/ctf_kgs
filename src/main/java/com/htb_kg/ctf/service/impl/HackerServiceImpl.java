@@ -1,12 +1,15 @@
 package com.htb_kg.ctf.service.impl;
 
 import com.htb_kg.ctf.dto.event.JoinEvent;
+import com.htb_kg.ctf.dto.hacker.HackerProfileResponse;
+import com.htb_kg.ctf.dto.hacker.HackerResponse;
 import com.htb_kg.ctf.dto.hacker.HackerUpdateRequest;
 import com.htb_kg.ctf.dto.rank.RankingResponse;
 import com.htb_kg.ctf.entities.*;
 import com.htb_kg.ctf.enums.Role;
 import com.htb_kg.ctf.exception.BadRequestException;
 import com.htb_kg.ctf.exception.NotFoundException;
+import com.htb_kg.ctf.mapper.HackerMapper;
 import com.htb_kg.ctf.mapper.UserMapper;
 import com.htb_kg.ctf.repositories.HackerRepository;
 import com.htb_kg.ctf.repositories.TaskHackerHistoryRepository;
@@ -34,6 +37,7 @@ public class HackerServiceImpl implements HackerService {
     private final UserMapper userMapper;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final HackerMapper hackerMapper;
     @Override
     public boolean answerToTask(String token, String answer, Long taskId) {
         Optional<Task> task = taskRepository.findById(taskId);
@@ -114,6 +118,13 @@ public class HackerServiceImpl implements HackerService {
         userRepository.save(user);
 
 
+    }
+
+    @Override
+    public HackerProfileResponse getById(String token) {
+        User user = userService.getUsernameFromToken(token);
+        Hacker hacker = user.getHacker();
+        return hackerMapper.toProfileDto(hacker);
     }
 }
 //eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJhdXRoIjp7ImF1dGhvcml0eSI6IkhBQ0tFUiJ9LCJpYXQiOjE3MDM3NTYwMDAsImV4cCI6MTcwNDA1NjAwMH0.68pkfCfCDPrLti0QgTxH8z-dJhblJSVUbf_gB7EZ1qU
