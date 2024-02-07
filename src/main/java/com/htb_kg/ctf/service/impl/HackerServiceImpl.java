@@ -54,10 +54,11 @@ public class HackerServiceImpl implements HackerService {
         if (task.get().getSubmitFlag().equals(answer)){
 
             if (historyRepository.findHackerTaskAnswerHistoryByTaskIdAndHackerId(taskId,hacker.getId()).isEmpty()){
-                history.get().setTask(task.get());
-                history.get().setHacker(hacker);
-                history.get().setTime(LocalDateTime.now().toString());
-                historyRepository.save(history.get());
+                HackerTaskAnswerHistory history1 = new HackerTaskAnswerHistory();
+                history1.setTask(task.get());
+                history1.setHacker(hacker);
+                history1.setTime(LocalDateTime.now().toString());
+                historyRepository.save(history1);
             }
             else {
                 throw new BadRequestException("hacker with id: "+hacker.getId()+" is already answered to the task with id: "+taskId+"!");
