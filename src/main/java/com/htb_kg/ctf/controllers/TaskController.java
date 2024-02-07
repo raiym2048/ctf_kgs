@@ -26,7 +26,7 @@ public class TaskController {
         return taskService.filter(filterRequest, token);
     }
     @GetMapping("/search/by/category")
-    public List<TaskResponse> taskResponses(@RequestBody TaskCategoryNameSearchRequest request, @RequestHeader("Authorization") String token){
+    public List<TaskResponse> taskResponses(@RequestParam(required = false) String request, @RequestHeader("Authorization") String token){
         return taskService.byCategory(request, token);
     }
 

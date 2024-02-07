@@ -241,8 +241,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskResponse> byCategory(TaskCategoryNameSearchRequest request, String token) {
-        List<Task> tasks = taskRepository.findAllByCategoryName(request.getCategoryName());
+    public List<TaskResponse> byCategory(String request, String token) {
+        List<Task> tasks = taskRepository.findAllByCategoryName(request);
         User user = userService.getUsernameFromToken(token);
         if (!user.getRole().equals(Role.HACKER))
             throw new BadRequestException("only hacker can!");

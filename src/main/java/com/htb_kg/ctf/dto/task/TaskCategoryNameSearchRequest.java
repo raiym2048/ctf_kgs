@@ -7,5 +7,4 @@ import lombok.Setter;
 @Setter
 public class TaskCategoryNameSearchRequest {
     private String categoryName;
-
 }
