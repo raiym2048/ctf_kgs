@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-resources/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/webjars/**").permitAll()
-                .requestMatchers("/jeopardy/**").authenticated()
+                .requestMatchers("/event/**").authenticated()
                 .requestMatchers("/category/**").permitAll()
                 .requestMatchers("/admin/**").permitAll()
                 .requestMatchers("/task/**").permitAll()
