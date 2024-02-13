@@ -32,9 +32,9 @@ public class SecurityConfig {
                         "/swagger-ui/**",
                         "/webjars/**",
                         "/swagger-ui.html",
-                        "/job_seeker/**",
-                        "/employer/**",
-                        "/vacancy/**",
+                        "/event/**",
+                        "/task/**",
+                        "/hacker/**",
                         "/api/v1/management/**").permitAll()
                 .requestMatchers("/swagger-resources/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
@@ -57,37 +57,5 @@ public class SecurityConfig {
         return http.build();
     }
 }
-//@Configuration
-//@EnableWebSecurity
-//public class SecurityConfig {
-//    @Bean
-//    SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
-//        http.csrf(CsrfConfigurer::disable)
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/swagger-resources/**").permitAll()
-//                        .requestMatchers("/localhost:8111/**").permitAll()
-//                        .requestMatchers("/swagger-ui/**").permitAll()
-//                        .requestMatchers("/webjars/**").permitAll()
-//                        .requestMatchers("/jeopardy/**").authenticated()
-//                        .requestMatchers("/category/**").permitAll()
-//                        .requestMatchers("/admin/**").permitAll()
-//                        .requestMatchers("/task/**").authenticated()
-//                        .requestMatchers("/hacker/**").permitAll()
-//                        .requestMatchers("/user/**").permitAll()
-//                        .requestMatchers("/vacancy/**").permitAll()
-//                        .requestMatchers("/api/v1/management/**").permitAll()
-//                        .requestMatchers("/level/**").permitAll()
-//                        .requestMatchers("/file/**").permitAll()
-//                        .requestMatchers("/api/v1/auth/**").permitAll()
-//                        .requestMatchers("/ws/**").permitAll()
-//                        .requestMatchers("/wss/**").permitAll()
-//                        .requestMatchers("/main/**").permitAll()
-//                        //.requestMatchers("/chat/**").permitAll()
-//                        // Disallow everything else..
-//                        .anyRequest().authenticated()
-//                )               ;
-//        return http.build();
-//    }
-//}
 
 
