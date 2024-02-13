@@ -76,19 +76,40 @@ values ('location5')
 
 
 insert into category (name)
-values ('category1')
+values ('Web')
 ;
 insert into category (name)
-values ('category2')
+values ('Crypto')
 ;
 insert into category (name)
-values ('category3')
+values ('Forensics')
 ;
 insert into category (name)
-values ('category4')
+values ('PWN')
 ;
 insert into category (name)
-values ('category5')
+values ('PPC')
+;
+insert into category (name)
+values ('Misc')
+;
+insert into category (name)
+values ('Recon')
+;
+insert into category (name)
+values ('Reverse')
+;
+insert into category (name)
+values ('OSINT')
+;
+insert into category (name)
+values ('Joys')
+;
+insert into category (name)
+values ('Stegano')
+;
+insert into category (name)
+values ('Mobile')
 ;
 insert into level (name)
 values ('level1')
