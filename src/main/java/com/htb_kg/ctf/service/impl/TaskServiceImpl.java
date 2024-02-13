@@ -1,6 +1,6 @@
 package com.htb_kg.ctf.service.impl;
 
-import com.htb_kg.ctf.dto.category.CategoryResponse;
+import com.htb_kg.ctf.dto.hint.HintTexts;
 import com.htb_kg.ctf.dto.task.*;
 import com.htb_kg.ctf.entities.*;
 import com.htb_kg.ctf.enums.Role;
@@ -13,6 +13,8 @@ import com.htb_kg.ctf.service.LevelService;
 import com.htb_kg.ctf.service.TaskService;
 import com.htb_kg.ctf.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -28,19 +31,39 @@ public class TaskServiceImpl implements TaskService {
     private final TaskMapper taskMapper;
     private final TaskRepository taskRepository;
     private final LevelService levelService;
-    private final FileRepository fileRepository;
     private final LevelRepository levelRepository;
     private final CategoryRepository categoryRepository;
     private final CategoryService categoryService;
     private final UserService userService;
     private final HackerRepository hackerRepository;
     private final HintRepository hintRepository;
+    private final OpenedHintsRepository openedHintsRepository;
+
     @Override
     public void addTask(TaskRequest taskRequest, String token) {
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.ADMIN))
+            throw new BadRequestException("only admins can add task!");
+        Task task = requestToEntity(taskRequest);
+        task.setHints(setHintTask(taskRequest.getHintRequests()));
 
-        taskRepository.save(requestToEntity(taskRequest));
+
+        taskRepository.save(task);
 
     }
+
+    private List<Hint> setHintTask(List<HintRequest> hintRequests) {
+        List<Hint> hints = new ArrayList<>();
+        for (HintRequest request: hintRequests){
+            Hint hint = new Hint();
+            hint.setTitle(request.getTitle());
+            hintRepository.save(hint);
+            hints.add(hint);
+
+        }
+        return hints;
+    }
+
 
     @Override
     @Transactional
@@ -128,6 +151,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskResponse getById(Long taskId, String token) {
+        TaskResponse taskResponse = new TaskResponse();
         User user = userService.getUsernameFromToken(token);
         if (!user.getRole().equals(Role.HACKER))
             throw new BadRequestException("only hacker can favorite!");
@@ -149,14 +173,30 @@ public class TaskServiceImpl implements TaskService {
             likeResponse.setDisLike(false);
         }
         if (hacker.getFavorites().contains(task.get())){
-            return taskMapper.toDto(task.get(), answeredTasks.contains(task.get()),likeResponse, true );
+            taskResponse = taskMapper.toDto(task.get(), answeredTasks.contains(task.get()),likeResponse, true , hacker);
+            taskResponse.setHintResponse(taskMapper.getHackerHints(hacker, task.get()));
+            taskResponse.setHintTexts(taskMapper.getHintText(hacker, task.get()));
+            return taskResponse;
 
 
         }
 
+        taskResponse = taskMapper.toDto(task.get(), answeredTasks.contains(task.get()),likeResponse, false , hacker);
+        taskResponse.setHintResponse(taskMapper.getHackerHints(hacker, task.get()));
+        taskResponse.setHintTexts(taskMapper.getHintText(hacker, task.get()));
 
-        return taskMapper.toDto(task.get(), answeredTasks.contains(task.get()),likeResponse, false );
+
+        return taskResponse;
     }
+
+
+
+
+
+
+
+
+
 
     @Override
     public LikeResponse likeTask(Long taskId, String token) {
@@ -247,6 +287,13 @@ public class TaskServiceImpl implements TaskService {
         Optional<Hint> hint =  hintRepository.findById(id);
         if (hint.isEmpty())
             throw new BadRequestException("hint not found with id: "+id);
+        if (openedHintsRepository.findByHintIdAndHackerId(hint.get().getId(), hacker.getId()).isEmpty()){
+            OpenedHints openedHints = new OpenedHints();
+            openedHints.setHint(hint.get());
+            openedHints.setHacker(hacker);
+            openedHints.setTask(taskRepository.findByHintsId(id).orElseThrow());
+            openedHintsRepository.save(openedHints);
+        }
        // hint.get().setUsable(false);
         hintRepository.save(hint.get());
 
@@ -269,7 +316,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskResponse> search(String searchRequest, String token) {
         List<Task> tasks = new ArrayList<>();
-        if (!searchRequest.isEmpty()){
+        if (searchRequest.isEmpty()){
             taskRepository.findAll();
         }
         else {
@@ -296,6 +343,7 @@ public class TaskServiceImpl implements TaskService {
         task.setUserSolves(taskRequest.getUserSolves());
         task.setLevel(!taskRequest.getLevelName().isBlank()? levelService.findByName(taskRequest.getLevelName()):null);
         task.setCategory(!taskRequest.getCategoryName().isEmpty()? categoryService.findByName(taskRequest.getCategoryName()):null);
+
        // task.setHints(toSaveHints(taskRequest.getHintRequests()));
 
         return task;

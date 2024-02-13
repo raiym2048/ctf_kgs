@@ -12,10 +12,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
+    Optional<Task> findByHintsId(Long id);
     List<Task> findAllByName(String name);
+
+    List<Task> findAllByNameContaining(String substring);
 
 
     List<Task> findAllByCategoryName(String categoryName);

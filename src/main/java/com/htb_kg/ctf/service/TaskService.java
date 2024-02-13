@@ -1,9 +1,14 @@
 package com.htb_kg.ctf.service;
 
 import com.htb_kg.ctf.dto.category.CategoryResponse;
+import com.htb_kg.ctf.dto.hint.HintTexts;
 import com.htb_kg.ctf.dto.task.*;
+import com.htb_kg.ctf.entities.Hacker;
+import com.htb_kg.ctf.entities.Hint;
+import com.htb_kg.ctf.entities.Task;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TaskService {
     void addTask(TaskRequest taskRequest, String token);
@@ -19,6 +24,8 @@ public interface TaskService {
     Boolean favorite(Long taskId, String token);
 
     TaskResponse getById(Long taskId, String token);
+
+
 
     LikeResponse likeTask(Long taskId, String token);
     LikeResponse disLikeTask(Long taskId, String token);

@@ -1,6 +1,7 @@
 package com.htb_kg.ctf.dto.task;
 
 import com.htb_kg.ctf.dto.file.FileResponse;
+import com.htb_kg.ctf.dto.hint.HintTexts;
 import lombok.Data;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class TaskResponse {
     private LikeResponse likeResponse;
     private Integer countLike;
     private Integer countDislike;
-    private String hintText;
+    private List<HintTexts> hintTexts;
     private List<HintResponse> hintResponse;
     private Boolean onFavorite;
 

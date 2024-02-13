@@ -18,10 +18,14 @@ alter table if exists category_tasks add constraint FKatxd3ttyrlobft4r2evo89448 
     ;alter table if exists hacker_table_favorites add constraint FKeteyac8i4jj7i1h6lw8mji2yl foreign key (hacker_id) references hacker_table
     ;alter table if exists hacker_task_answer_history add constraint FK22itnmyilksorl53rn7hry4dn foreign key (hacker_id) references hacker_table
     ;alter table if exists hacker_task_answer_history add constraint FK8l10u2f6hvio2gwfyjhg1ksw foreign key (task_id) references task
+    ;alter table if exists hint add constraint FKoxsujse5pqgqab1j10y348sfl foreign key (task_id) references task
     ;alter table if exists jeopardy_tasks add constraint FKsq9su8crnrhy45455d4siwnd9 foreign key (tasks_id) references task
     ;alter table if exists jeopardy_tasks add constraint FK2w5ng7x9i7bxuev0lbi4fhwog foreign key (jeopardy_id) references jeopardy
     ;alter table if exists level_tasks add constraint FK8rd7oqb145wklgv343iyecmep foreign key (tasks_id) references task
     ;alter table if exists level_tasks add constraint FK724a8tqt5dne33dpu5dvb7f0q foreign key (level_id) references level
+    ;alter table if exists opened_hints add constraint FK99i1r7pp3y6eqjqraa4uoul65 foreign key (hacker_id) references hacker_table
+    ;alter table if exists opened_hints add constraint FKq3ogp7x8cg9du0jilma9i5x45 foreign key (hint_id) references hint
+    ;alter table if exists opened_hints add constraint FKmwb8uym3rq23n421lirspiecc foreign key (task_id) references task
     ;alter table if exists task add constraint FKkjb4pwpo8oqc8fvkgbmiitsu9 foreign key (category_id) references category
     ;alter table if exists task add constraint FK6uc5f4sqx7dbm8g19ud8qekab foreign key (download_file_id) references file_data
     ;alter table if exists task add constraint FK3e0wdf51w2ty4p6u773spqsl foreign key (level_id) references level
@@ -43,5 +47,4 @@ alter table if exists category_tasks add constraint FKatxd3ttyrlobft4r2evo89448 
     ;alter table if exists users_table add constraint FKkwhrmsvlqir4u9gdo9ow420yy foreign key (access_to_business_id) references file_data
     ;alter table if exists users_table add constraint FKbsxdu6o0no1dle2t5dq6kh8tq foreign key (hacker_id) references hacker_table
     ;alter table if exists users_table add constraint FKk3akakpqtsx604hk26rqpnxtt foreign key (logo_image_id) references file_data
-    ;alter table if exists users_table add constraint FKrlmjwi6oawgqmoakdrf587it9 foreign key (teacher_id) references teacher_table
-     ;
+    ;alter table if exists users_table add constraint FKrlmjwi6oawgqmoakdrf587it9 foreign key (teacher_id) references teacher_table;

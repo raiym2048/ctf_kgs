@@ -1,24 +1,31 @@
 package com.htb_kg.ctf.mapper.impl;
 
+import com.htb_kg.ctf.dto.hint.HintTexts;
+import com.htb_kg.ctf.dto.task.HintResponse;
 import com.htb_kg.ctf.dto.task.LikeResponse;
 import com.htb_kg.ctf.dto.task.TaskResponse;
 import com.htb_kg.ctf.entities.Hacker;
+import com.htb_kg.ctf.entities.Hint;
+import com.htb_kg.ctf.entities.OpenedHints;
 import com.htb_kg.ctf.entities.Task;
 import com.htb_kg.ctf.mapper.FileMapper;
-import com.htb_kg.ctf.mapper.HintMapper;
 import com.htb_kg.ctf.mapper.TaskMapper;
+import com.htb_kg.ctf.repositories.OpenedHintsRepository;
+import com.htb_kg.ctf.service.TaskService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
 public class TaskMapperImpl implements TaskMapper {
     private final FileMapper fileMapper;
-    private final HintMapper hintMapper;
+    private final OpenedHintsRepository openedHintsRepository;
+
 
     @Override
     public List<TaskResponse> toDtoS(List<Task> all, List<Task> answeredTasks, Hacker hacker) {
@@ -43,20 +50,26 @@ public class TaskMapperImpl implements TaskMapper {
             }
 
             if (answeredTasks.contains(task)){
+                TaskResponse taskResponse = toDto(task, true, likeResponse, onFavorite, hacker);
+                taskResponse.setHintResponse(getHackerHints(hacker, task));
+                taskResponse.setHintTexts(getHintText(hacker, task));
 
-
-                taskResponses.add(toDto(task, true, likeResponse, onFavorite));
+                taskResponses.add(taskResponse);
                 System.out.println("istrue");
             }else {
-                taskResponses.add(toDto(task, false, likeResponse, onFavorite));
+                TaskResponse taskResponse = toDto(task, false, likeResponse, onFavorite, hacker);
+                taskResponse.setHintResponse(getHackerHints(hacker, task));
+                taskResponse.setHintTexts(getHintText(hacker, task));
+                taskResponses.add(taskResponse);
                 System.out.println("isfalse");
             }
         }
+
         return taskResponses;
     }
 
     @Override
-    public TaskResponse toDto(Task task, Boolean b, LikeResponse likeResponse, Boolean onFavorite) {
+    public TaskResponse toDto(Task task, Boolean b, LikeResponse likeResponse, Boolean onFavorite, Hacker hacker) {
         TaskResponse taskResponse = new TaskResponse();
         taskResponse.setId(task.getId());
         taskResponse.setTaskCreator(task.getTaskCreator());
@@ -73,6 +86,7 @@ public class TaskMapperImpl implements TaskMapper {
         taskResponse.setLevelName(task.getLevel()!=null? task.getLevel().getName(): null);
         taskResponse.setDownloadFile(task.getDownloadFile()!=null?fileMapper.toDto(task.getDownloadFile()):null);
         taskResponse.setIsSolved(b);
+
 //        taskResponse.setHintResponse(hintMapper.toResponses(task.getHints()));
 //        if (task.getHints()!=null){
 //            if (!task.getHints().isEmpty()){
@@ -86,6 +100,12 @@ public class TaskMapperImpl implements TaskMapper {
         return taskResponse;
 
     }
+
+
+
+
+
+
     @Override
     public List<TaskResponse> toDtoS(List<Task> all, Hacker hacker) {
         List<TaskResponse> taskResponses = new ArrayList<>();
@@ -105,10 +125,10 @@ public class TaskMapperImpl implements TaskMapper {
             }
             if (task.getLikedHackers().contains(hacker)){
                 if (hacker.getFavorites().contains(task)){
-                    taskResponses.add(toDto(task, false,likeResponse, true));
+                    taskResponses.add(toDto(task, false,likeResponse, true, hacker));
                 }
                 else {
-                    taskResponses.add(toDto(task, false,likeResponse, false));
+                    taskResponses.add(toDto(task, false,likeResponse, false, hacker));
 
                 }
 
@@ -119,7 +139,7 @@ public class TaskMapperImpl implements TaskMapper {
     }
 
     @Override
-    public TaskResponse toDto(Task task, LikeResponse likeResponse) {
+    public TaskResponse toDto(Task task, LikeResponse likeResponse, Hacker hacker) {
         TaskResponse taskResponse = new TaskResponse();
         taskResponse.setId(task.getId());
         taskResponse.setTaskCreator(task.getTaskCreator());
@@ -143,4 +163,54 @@ public class TaskMapperImpl implements TaskMapper {
         return taskResponse;
 
     }
+
+    @Override
+    public List<HintResponse> compareAndGetNotOpenedHints(List<Hint> taskHints, List<Hint> openedHints) {
+        List<Hint> notOpenedHints = new ArrayList<>();
+        for (Hint hint: taskHints){
+            if (!openedHints.contains(hint)){
+                notOpenedHints.add(hint);
+            }
+        }
+        return hintsToHintResponse(notOpenedHints);
+    }
+
+    private List<HintResponse> hintsToHintResponse(List<Hint> notOpenedHints) {
+        List<HintResponse> hintResponses = new ArrayList<>();
+        for (Hint hint: notOpenedHints){
+            HintResponse hintResponse = new HintResponse();
+            hintResponse.setId(hint.getId());
+            hintResponse.setHint(hint.getTitle());
+            hintResponses.add(hintResponse);
+        }
+        return hintResponses;
+    }
+
+    @Override
+    public List<HintResponse> getHackerHints(Hacker hacker, Task task) {
+        List<Hint> taskHints = task.getHints();
+        System.out.println("the size of hints:"+taskHints.size());
+
+        List<Hint> openedHints = openedHintsRepository.findByHackerAndHintIn(hacker, taskHints).stream().map(OpenedHints::getHint).collect(Collectors.toList());
+        System.out.println("opened hints size:"+openedHints.size());
+        return compareAndGetNotOpenedHints(taskHints, openedHints);
+
+    }
+    @Override
+    public List<HintTexts> getHintText(Hacker hacker, Task task) {
+        List<OpenedHints> openedHints = openedHintsRepository.findAllByHackerIdAndTaskId(hacker.getId(), task.getId());
+
+        return openedHintsToHintTexts(openedHints);
+    }
+    private List<HintTexts> openedHintsToHintTexts(List<OpenedHints> openedHints) {
+        List<HintTexts> hintTexts = new ArrayList<>();
+        for (OpenedHints openedHints1: openedHints){
+            HintTexts text = new HintTexts();
+            text.setHintText(openedHints1.getHint().getTitle());
+            hintTexts.add(text);
+        }
+        return hintTexts;
+    }
+
+
 }

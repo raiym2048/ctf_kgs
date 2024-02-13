@@ -43,6 +43,11 @@ public class Task {
     @ManyToMany()
     private List<Hacker> answeredHackers;
 
+    @OneToMany
+    private List<Hint> hints;
+
+
+
 
 
 
