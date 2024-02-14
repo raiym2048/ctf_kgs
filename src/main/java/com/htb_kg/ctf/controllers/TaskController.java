@@ -3,6 +3,8 @@ package com.htb_kg.ctf.controllers;
 
 import com.htb_kg.ctf.dto.category.CategoryResponse;
 import com.htb_kg.ctf.dto.task.*;
+import com.htb_kg.ctf.entities.Task;
+import com.htb_kg.ctf.repositories.TaskRepository;
 import com.htb_kg.ctf.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class TaskController {
     private final TaskService taskService;
+    private final TaskRepository taskRepository;
 
     @GetMapping("/search")
     public List<TaskResponse> taskResponses2(@RequestParam(required = false) String searchRequest, @RequestHeader("Authorization") String token){
@@ -77,6 +80,11 @@ public class TaskController {
     @DeleteMapping("/deleteById")
     public void deleteById(@RequestBody TaskIdRequest idRequest){
         taskService.deleteById(idRequest.getId());
+    }
+
+    @GetMapping("/getAllTasksAnonymous")
+    public List<Task> tasks(){
+        return taskRepository.findAll();
     }
 
 

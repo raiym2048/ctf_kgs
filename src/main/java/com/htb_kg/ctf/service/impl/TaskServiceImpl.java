@@ -38,6 +38,7 @@ public class TaskServiceImpl implements TaskService {
     private final HackerRepository hackerRepository;
     private final HintRepository hintRepository;
     private final OpenedHintsRepository openedHintsRepository;
+    private final UserRepository userRepository;
 
     @Override
     public void addTask(TaskRequest taskRequest, String token) {
@@ -293,6 +294,9 @@ public class TaskServiceImpl implements TaskService {
             openedHints.setHacker(hacker);
             openedHints.setTask(taskRepository.findByHintsId(id).orElseThrow());
             openedHintsRepository.save(openedHints);
+            user.getHacker().setPoints(user.getHacker().getPoints()-10);
+            userRepository.save(user);
+
         }
        // hint.get().setUsable(false);
         hintRepository.save(hint.get());

@@ -56,6 +56,8 @@ public class HackerServiceImpl implements HackerService {
                                 get().getTime()+
                     "!", HttpStatus.BAD_GATEWAY);
         if (task.get().getSubmitFlag().equals(answer)){
+            task.get().setUserSolves(task.get().getUserSolves()>0?task.get().getUserSolves()+1:1);
+
 
             if (historyRepository.findHackerTaskAnswerHistoryByTaskIdAndHackerId(taskId,hacker.getId()).isEmpty()){
                 HackerTaskAnswerHistory history1 = new HackerTaskAnswerHistory();
@@ -69,6 +71,12 @@ public class HackerServiceImpl implements HackerService {
             }
 
             hacker.setPoints(hacker.getPoints()==null?task.get().getPoints(): hacker.getPoints()+ task.get().getPoints());
+
+            if (task.get().getPoints()>100){
+                task.get().setPoints((int) (task.get().getPoints()*0.2));
+            }
+            taskRepository.save(task.get());
+
             List<Task> answeredTasks = new ArrayList<>();
             if (!hacker.getAnsweredTasks().isEmpty())
                 answeredTasks = hacker.getAnsweredTasks();
