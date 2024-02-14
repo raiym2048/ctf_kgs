@@ -320,11 +320,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskResponse> search(String searchRequest, String token) {
         List<Task> tasks = new ArrayList<>();
-        if (searchRequest.isEmpty()){
+        if (!searchRequest.matches(".*\\w.*")){
             taskRepository.findAll();
         }
         else {
-            taskRepository.findAllByName(searchRequest);
+            taskRepository.findAllByNameContaining(searchRequest);
 
         }
         User user = userService.getUsernameFromToken(token);
