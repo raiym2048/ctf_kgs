@@ -111,10 +111,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Map<String, Object> extraClaims = new HashMap<>();
 
         String token = jwtService.generateToken(extraClaims, auth);
+
+        String logoLetter = auth.getNickname().substring(0,1).toUpperCase();
+        if (auth.getNickname().length()> 2)
+            logoLetter = auth.getNickname().substring(0,2).toUpperCase();
+        String[] colors = {"#FFD1DC","#EFA94A" , "#7FB5B5","#5D9B9B", "#77DD77", "#FF7514", "#FF9BAA"};
+
         return AuthenticationResponse.builder()
                 .user(convertToUserResponse(auth))
                 .accessToken(token)
+                .logoLetter(logoLetter)
+                .color(colors[randomColor(colors.length)])
                 .build();
+    }
+
+    private int randomColor(int length) {
+        Random random = new Random();
+
+        // Next int will generate a number between 0 (inclusive) and 7 (exclusive)
+        return random.nextInt(length);
     }
 
     private UserResponse convertToUserResponse(User user) {
