@@ -321,10 +321,11 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskResponse> search(String searchRequest, String token) {
         List<Task> tasks = new ArrayList<>();
         if (!searchRequest.matches(".*\\w.*")){
-            taskRepository.findAll();
+            System.out.println("its an empty!");
+            tasks= taskRepository.findAll();
         }
         else {
-            taskRepository.findAllByNameContaining(searchRequest);
+            tasks = taskRepository.findAllByNameContaining(searchRequest);
 
         }
         User user = userService.getUsernameFromToken(token);
