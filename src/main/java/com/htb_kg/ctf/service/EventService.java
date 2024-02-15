@@ -6,10 +6,14 @@ import com.htb_kg.ctf.dto.task.TaskResponse;
 
 import java.util.List;
 
-public interface JeopardyService {
+public interface EventService {
     String create(JeopardyCreateRequest createRequest, String token);
 
     List<JeopardyResponse> getAll();
 
     List<TaskResponse> eventTasks(Long eventId, String token);
+
+    Integer pastCount(String token);
+
+    List<JeopardyResponse> pastEvents(String token);
 }

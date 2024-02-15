@@ -37,4 +37,9 @@ public interface TaskService {
     void setTaskPublic(ListId listId, String token);
 
     void setTaskPrivate(ListId listId, String token);
+
+
+    Integer hackerSubmittedTaskCount(String token);
+
+    List<TaskResponse> hackerSubmittedTasks(String token);
 }

@@ -4,6 +4,7 @@ import com.htb_kg.ctf.dto.file.FileResponse;
 import com.htb_kg.ctf.dto.hint.HintTexts;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -15,7 +16,7 @@ public class TaskResponse {
     private String levelName;
     private Integer userSolves;
     private String categoryName;
-    private String releaseDate;
+    private LocalDateTime releaseDate;
     private String taskCreator;
     private FileResponse downloadFile;
     private Integer points;

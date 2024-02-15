@@ -4,6 +4,8 @@ import com.htb_kg.ctf.enums.Role;
 import lombok.*;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -36,7 +38,7 @@ public class Task {
 
     @ManyToOne
     private Category category;
-    private String releaseDate;
+    private LocalDateTime releaseDate;
     private String taskCreator;
     @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private FileData downloadFile;

@@ -64,8 +64,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         user.setCreationDate(LocalDateTime.now().toString());
 
-        user.setCheckCode(-99);
-       // emailSenderService.sendEmail(user.getEmail(),"the check code: ", "d", user.getCheckCode());
+//        user.setCheckCode(-99);
+//        emailSenderService.sendEmail(user.getEmail(),"the check code: ", ""+user.getCheckCode());
         user.setNickname(request.getNickname());
 
         Hacker hacker = new Hacker();

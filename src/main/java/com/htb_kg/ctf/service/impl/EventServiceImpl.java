@@ -1,4 +1,4 @@
-package com.htb_kg.ctf.service.emailSender;
+package com.htb_kg.ctf.service.impl;
 
 import com.htb_kg.ctf.dto.event.jeopardy.JeopardyCreateRequest;
 import com.htb_kg.ctf.dto.event.jeopardy.JeopardyResponse;
@@ -8,23 +8,20 @@ import com.htb_kg.ctf.enums.Role;
 import com.htb_kg.ctf.exception.BadCredentialsException;
 import com.htb_kg.ctf.exception.BadRequestException;
 import com.htb_kg.ctf.mapper.JeopardyMapper;
-import com.htb_kg.ctf.repositories.JeopardyRepository;
 import com.htb_kg.ctf.repositories.LocationRepository;
 import com.htb_kg.ctf.repositories.TaskRepository;
 import com.htb_kg.ctf.repositories.event.EventFormatRepository;
 import com.htb_kg.ctf.repositories.event.EventRepository;
 import com.htb_kg.ctf.repositories.event.EventStatusRepository;
 import com.htb_kg.ctf.repositories.event.EventTypeRepository;
-import com.htb_kg.ctf.service.JeopardyService;
+import com.htb_kg.ctf.service.EventService;
 import com.htb_kg.ctf.service.TaskService;
 import com.htb_kg.ctf.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +29,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class JeopardyServiceImpl implements JeopardyService {
+public class EventServiceImpl implements EventService {
     private final UserService userService;
     private final EventStatusRepository eventStatusRepository;
     private final EventFormatRepository eventFormatRepository;
@@ -76,7 +73,22 @@ public class JeopardyServiceImpl implements JeopardyService {
     public List<TaskResponse> eventTasks(Long eventId, String token) {
         User user = userService.getUsernameFromToken(token);
 
+
         return taskService.getAllEventTasks(eventId);
+    }
+
+    @Override
+    public Integer pastCount(String token) {
+        User user = userService.getUsernameFromToken(token);
+
+        return eventRepository.findByEndDateBefore(LocalDateTime.now()).size();
+    }
+
+    @Override
+    public List<JeopardyResponse> pastEvents(String token) {
+        User user = userService.getUsernameFromToken(token);
+
+        return jeopardyMapper.toDtoS(eventRepository.findByEndDateBefore(LocalDateTime.now()));
     }
 
     private List<Task> findChallenges(List<Long> challengeIds) {
@@ -118,6 +130,21 @@ public class JeopardyServiceImpl implements JeopardyService {
         if (eventStatus.isEmpty())
             throw new BadRequestException("the event status not found with title:"+title);
         return eventStatus.get();
+    }
+
+    @Scheduled(fixedRate = 60000) // this will run the method every 60 seconds
+    public void endEvent(){
+        LocalDateTime now = LocalDateTime.now();
+
+        // Check for events that should be ended
+        List<Event> eventsToClose = eventRepository.findAllByEndDateBefore(now);
+
+        // Close each event and update it in the database
+        for (Event event : eventsToClose) {
+            event.setEventStatus(eventStatusRepository.findByTitle("closed").get()); // assuming you have a closed flag in your Event entity
+            eventRepository.save(event);
+        }
+
     }
 
 }

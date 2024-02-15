@@ -1,7 +1,7 @@
 
  create table category (id bigserial not null, name varchar(255), primary key (id))
     ; create table category_tasks (category_id bigint not null, tasks_id bigint not null unique)
-    ; create table event (event_format_id bigint, event_status_id bigint, event_type_id bigint, id bigserial not null, location_id bigint, winner_id bigint, end_date varchar(255), key varchar(255), start_date varchar(255), title varchar(255), primary key (id))
+    ; create table event (end_date timestamp(6), event_format_id bigint, event_status_id bigint, event_type_id bigint, id bigserial not null, location_id bigint, start_date timestamp(6), winner_id bigint, key varchar(255), title varchar(255), primary key (id))
     ; create table event_challenges (challenges_id bigint not null unique, event_id bigint not null)
     ; create table event_joined_hackers (event_id bigint not null, joined_hackers_id bigint not null)
     ; create table event_joined_teams (event_id bigint not null, joined_teams_id bigint not null)
@@ -20,7 +20,7 @@
     ; create table level_tasks (level_id bigint not null, tasks_id bigint not null unique)
     ; create table location (id bigserial not null, title varchar(255), primary key (id))
     ; create table opened_hints (hacker_id bigint, hint_id bigint, id bigserial not null, task_id bigint, primary key (id))
-    ; create table task (points integer, is_private boolean, user_solves integer, category_id bigint, download_file_id bigint unique, id bigserial not null, level_id bigint, description varchar(255), name varchar(255), release_date varchar(255), submit_flag varchar(255), task_creator varchar(255), primary key (id))
+    ; create table task (is_private boolean, points integer, user_solves integer, category_id bigint, download_file_id bigint unique, id bigserial not null, level_id bigint, release_date timestamp(6), description varchar(255), name varchar(255), submit_flag varchar(255), task_creator varchar(255), primary key (id))
     ; create table task_answered_hackers (answered_hackers_id bigint not null, task_id bigint not null)
     ; create table task_disliked_hackers (disliked_hackers_id bigint not null, task_id bigint not null)
     ; create table task_hints (hints_id bigint not null unique, task_id bigint not null)

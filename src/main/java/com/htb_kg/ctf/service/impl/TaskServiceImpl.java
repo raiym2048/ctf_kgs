@@ -311,6 +311,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskResponse> byCategory(String request, String token) {
         List<Task> tasks = taskRepository.findAllByCategoryNameAndIsPrivate(request, false);
+        if (!request.matches(".*\\w.*")){
+            System.out.println("its an empty!");
+            tasks= taskRepository.findAllByIsPrivate(false);
+        }
         User user = userService.getUsernameFromToken(token);
         if (!user.getRole().equals(Role.HACKER))
             throw new BadRequestException("only hacker can!");
@@ -390,6 +394,24 @@ public class TaskServiceImpl implements TaskService {
             taskRepository.save(task.get());
         }
     }
+
+    @Override
+    public Integer hackerSubmittedTaskCount(String token) {
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.HACKER))
+            throw new BadRequestException("only hackers can call method: count done tasks!");
+
+        return user.getHacker().getAnsweredTasks().size();
+    }
+
+    @Override
+    public List<TaskResponse> hackerSubmittedTasks(String token) {
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.HACKER))
+            throw new BadRequestException("only hackers can call method: done tasks!");
+        return taskMapper.toDtoS(user.getHacker().getAnsweredTasks(), user.getHacker());
+    }
+
 
     private Task requestToEntity(TaskRequest taskRequest) {
         Task task = new Task();

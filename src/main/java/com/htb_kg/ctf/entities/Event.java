@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -15,8 +17,8 @@ public class Event {
     private Long id;
 
     private String title;
-    private String startDate;
-    private String endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     private String key;
 

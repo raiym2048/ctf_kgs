@@ -1,13 +1,17 @@
 package com.htb_kg.ctf.controllers;
 
 import com.htb_kg.ctf.dto.event.JoinEvent;
+import com.htb_kg.ctf.dto.event.jeopardy.JeopardyResponse;
 import com.htb_kg.ctf.dto.hacker.HackerAnswerTaskRequest;
 import com.htb_kg.ctf.dto.hacker.HackerProfileResponse;
 import com.htb_kg.ctf.dto.hacker.HackerResponse;
 import com.htb_kg.ctf.dto.hacker.HackerUpdateRequest;
 import com.htb_kg.ctf.dto.rank.RankingResponse;
+import com.htb_kg.ctf.dto.task.TaskResponse;
 import com.htb_kg.ctf.dto.user.UserResponse;
+import com.htb_kg.ctf.service.EventService;
 import com.htb_kg.ctf.service.HackerService;
+import com.htb_kg.ctf.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +23,8 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class HackerController {
     private final HackerService hackerService;
+    private final TaskService taskService;
+    private final EventService eventService;
 
     @GetMapping("/byId")
     public HackerProfileResponse hackerResponse(@RequestHeader("Authorization") String token){
@@ -44,4 +50,24 @@ public class HackerController {
     public void updateHacker(@RequestBody HackerUpdateRequest request, @RequestHeader("Authorization") String token){
         hackerService.update(request, token);
     }
+
+    @GetMapping("/task/submitted/count")
+    public Integer submittedCountTask(@RequestHeader("Authorization") String token){
+        return taskService.hackerSubmittedTaskCount(token);
+    }
+    @GetMapping("/task/submitted")
+    public List<TaskResponse> submittedTasks(@RequestHeader("Authorization") String token){
+        return taskService.hackerSubmittedTasks(token);
+    }
+
+    @GetMapping("/event/past/count")
+    public Integer pastEventsCount(@RequestHeader("Authorization") String token){
+        return eventService.pastCount(token);
+    }
+
+    @GetMapping("/events/past")
+    public List<JeopardyResponse> pastEvents(@RequestHeader("Authorization") String token){
+        return eventService.pastEvents(token);
+    }
+
 }

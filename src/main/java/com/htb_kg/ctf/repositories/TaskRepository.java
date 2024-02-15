@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +36,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             @Param("level") Level level,
             @Param("userSolves") Integer userSolves,
             @Param("category") Category category,
-            @Param("releaseDate") String releaseDate,
+            @Param("releaseDate") LocalDateTime releaseDate,
             @Param("taskCreator") String taskCreator,
             @Param("submitFlag") String submitFlag
     );}

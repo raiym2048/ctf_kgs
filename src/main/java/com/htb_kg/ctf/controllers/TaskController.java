@@ -23,12 +23,7 @@ public class TaskController {
         return taskService.search(searchRequest, token);
     }
 
-    @GetMapping("/filter")
-    public List<TaskResponse> taskResponses(@RequestParam(required = false) Boolean s1,
-                                            @RequestParam(required = false) Boolean s2,
-                                            @RequestParam(required = false) Boolean s3, @RequestHeader("Authorization") String token){
-        return taskService.filter(s1, s2,s3, token);
-    }
+
     @GetMapping("/search/by/category")
     public List<TaskResponse> taskResponses1(@RequestParam(required = false) String request, @RequestHeader("Authorization") String token){
         return taskService.byCategory(request, token);
@@ -101,7 +96,4 @@ public class TaskController {
     public void setPrivate(@RequestBody ListId listId, @RequestHeader("Authorization") String token){
         taskService.setTaskPrivate(listId, token);
     }
-
-
-
 }

@@ -3,16 +3,16 @@ package com.htb_kg.ctf;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import java.security.SecureRandom;
 
 public class Test {
     public static void main(String[] args) {
-        int passwordLength = 12; // Specify the desired length of the password
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println("Current DateTime: " + now);
 
-        String randomPassword = generateRandomPassword(passwordLength);
-        System.out.println("Random Password: " + randomPassword);
     }
 
     private static String generateRandomPassword(int length) {
