@@ -16,13 +16,14 @@ import java.util.Optional;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
-    Optional<Task> findByHintsId(Long id);
-    List<Task> findAllByName(String name);
+    Optional<Task> findByHintsIdAndType(Long id, Boolean type);
+    List<Task> findAllByType(Boolean type);
+    List<Task> findAllByNameAndType(String name, Boolean type);
 
-    List<Task> findAllByNameContaining(String substring);
+    List<Task> findAllByNameContainingAndType(String substring, Boolean type);
 
 
-    List<Task> findAllByCategoryName(String categoryName);
+    List<Task> findAllByCategoryNameAndType(String categoryName, Boolean type);
 
     @Modifying
     @Query("UPDATE Task t SET t.name = :name, t.description = :description, t.points = :points, t.level = :level, t.userSolves = :userSolves, t.category = :category, t.releaseDate = :releaseDate, t.taskCreator = :taskCreator, t.submitFlag = :submitFlag WHERE t.id = :id")

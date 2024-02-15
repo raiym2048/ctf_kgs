@@ -26,6 +26,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -54,16 +55,8 @@ public class JeopardyServiceImpl implements JeopardyService {
         event.setEndDate(createRequest.getEndDate());
         event.setChallenges(findChallenges(createRequest.getChallengeIds()));
         if (createRequest.getEventType().equals("private")){
-            String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-            SecureRandom random = new SecureRandom();
-            StringBuilder password = new StringBuilder();
-
-            for (int i = 0; i < 12; i++) {
-                int randomIndex = random.nextInt(characters.length());
-                password.append(characters.charAt(randomIndex));
-            }
-            event.setKey(password.toString());
+            String key = UUID.randomUUID().toString();
+            event.setKey(key);
             eventRepository.save(event);
             return event.getKey();
         }
@@ -82,6 +75,8 @@ public class JeopardyServiceImpl implements JeopardyService {
             Optional<Task> task = taskRepository.findById(i);
             if (task.isEmpty())
                 throw new BadRequestException("the task with id:"+i+"not found!");
+            task.get().setType(true);
+            taskRepository.save(task.get());
             challenges.add(task.get());
         }
         return challenges;

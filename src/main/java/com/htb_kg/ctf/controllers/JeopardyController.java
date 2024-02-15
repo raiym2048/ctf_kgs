@@ -24,4 +24,5 @@ public class JeopardyController {
     public List<JeopardyResponse> getAll(){
         return jeopardyService.getAll();
     }
+
 }

@@ -89,7 +89,7 @@ public class TaskServiceImpl implements TaskService {
 
         System.out.println("the size:"+answeredTasks.size());
 
-        return taskMapper.toDtoS(taskRepository.findAll(), answeredTasks, hacker);
+        return taskMapper.toDtoS(taskRepository.findAllByType(false), answeredTasks, hacker);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskResponse> filter(Boolean s1, Boolean s2, Boolean s3, String token) {
-        List<Task> tasks = taskRepository.findAll();
+        List<Task> tasks = taskRepository.findAllByType(false);
         User user = userService.getUsernameFromToken(token);
         if (!user.getRole().equals(Role.HACKER))
             throw new BadRequestException("only hacker can!");
@@ -292,7 +292,7 @@ public class TaskServiceImpl implements TaskService {
             OpenedHints openedHints = new OpenedHints();
             openedHints.setHint(hint.get());
             openedHints.setHacker(hacker);
-            openedHints.setTask(taskRepository.findByHintsId(id).orElseThrow());
+            openedHints.setTask(taskRepository.findByHintsIdAndType(id, false).orElseThrow());
             openedHintsRepository.save(openedHints);
             user.getHacker().setPoints(user.getHacker().getPoints()-10);
             userRepository.save(user);
@@ -307,7 +307,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskResponse> byCategory(String request, String token) {
-        List<Task> tasks = taskRepository.findAllByCategoryName(request);
+        List<Task> tasks = taskRepository.findAllByCategoryNameAndType(request, false);
         User user = userService.getUsernameFromToken(token);
         if (!user.getRole().equals(Role.HACKER))
             throw new BadRequestException("only hacker can!");
@@ -322,10 +322,10 @@ public class TaskServiceImpl implements TaskService {
         List<Task> tasks = new ArrayList<>();
         if (!searchRequest.matches(".*\\w.*")){
             System.out.println("its an empty!");
-            tasks= taskRepository.findAll();
+            tasks= taskRepository.findAllByType(false);
         }
         else {
-            tasks = taskRepository.findAllByNameContaining(searchRequest);
+            tasks = taskRepository.findAllByNameContainingAndType(searchRequest, false);
 
         }
         User user = userService.getUsernameFromToken(token);
