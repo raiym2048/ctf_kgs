@@ -19,7 +19,11 @@ public interface TaskMapper {
 
     List<TaskResponse> toDtoS(List<Task> all, Hacker hacker);
 
+    List<TaskResponse> toDtoS(List<Task> all);
+
     TaskResponse toDto(Task task, LikeResponse likeResponse, Hacker hacker);
+
+    TaskResponse toDto(Task task);
 
     List<HintResponse> compareAndGetNotOpenedHints(List<Hint> taskHints, List<Hint> openedHints);
 

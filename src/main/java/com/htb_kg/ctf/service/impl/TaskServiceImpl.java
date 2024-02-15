@@ -8,6 +8,7 @@ import com.htb_kg.ctf.exception.BadRequestException;
 import com.htb_kg.ctf.exception.NotFoundException;
 import com.htb_kg.ctf.mapper.TaskMapper;
 import com.htb_kg.ctf.repositories.*;
+import com.htb_kg.ctf.repositories.event.EventRepository;
 import com.htb_kg.ctf.service.CategoryService;
 import com.htb_kg.ctf.service.LevelService;
 import com.htb_kg.ctf.service.TaskService;
@@ -39,6 +40,7 @@ public class TaskServiceImpl implements TaskService {
     private final HintRepository hintRepository;
     private final OpenedHintsRepository openedHintsRepository;
     private final UserRepository userRepository;
+    private final EventRepository eventRepository;
 
     @Override
     public void addTask(TaskRequest taskRequest, String token) {
@@ -83,8 +85,8 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskResponse> getAll(String token) {
         User user = userService.getUsernameFromToken(token);
         List<Task> answeredTasks = user.getHacker().getAnsweredTasks();
-        if (!user.getRole().equals(Role.HACKER))
-            throw new BadRequestException("only hacker can favorite!");
+//        if (!user.getRole().equals(Role.HACKER))
+//            throw new BadRequestException("only hacker can favorite!");
         Hacker hacker = user.getHacker();
 
         System.out.println("the size:"+answeredTasks.size());
@@ -335,6 +337,16 @@ public class TaskServiceImpl implements TaskService {
             return taskMapper.toDtoS(tasks, answeredTasks, hacker);
         }
         return null;
+    }
+
+    @Override
+    public List<TaskResponse> getAllEventTasks(Long eventId) {
+        Optional<Event> event = eventRepository.findById(eventId);
+        if (event.isEmpty())
+            throw new NotFoundException("no event with id: "+eventId+"!", HttpStatus.BAD_REQUEST);
+
+
+        return taskMapper.toDtoS(event.get().getChallenges());
     }
 
     private Task requestToEntity(TaskRequest taskRequest) {

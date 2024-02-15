@@ -35,4 +35,6 @@ public interface TaskService {
     List<TaskResponse> byCategory(String request, String token);
 
     List<TaskResponse> search(String searchRequest, String token);
+
+    List<TaskResponse> getAllEventTasks(Long eventId);
 }

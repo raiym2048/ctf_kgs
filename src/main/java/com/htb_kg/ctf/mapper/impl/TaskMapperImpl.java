@@ -11,9 +11,7 @@ import com.htb_kg.ctf.entities.Task;
 import com.htb_kg.ctf.mapper.FileMapper;
 import com.htb_kg.ctf.mapper.TaskMapper;
 import com.htb_kg.ctf.repositories.OpenedHintsRepository;
-import com.htb_kg.ctf.service.TaskService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -139,6 +137,16 @@ public class TaskMapperImpl implements TaskMapper {
     }
 
     @Override
+    public List<TaskResponse> toDtoS(List<Task> all) {
+        List<TaskResponse> taskResponses = new ArrayList<>();
+
+        for (Task task: all){
+             taskResponses.add(toDto(task));
+        }
+        return taskResponses;
+    }
+
+    @Override
     public TaskResponse toDto(Task task, LikeResponse likeResponse, Hacker hacker) {
         TaskResponse taskResponse = new TaskResponse();
         taskResponse.setId(task.getId());
@@ -159,6 +167,28 @@ public class TaskMapperImpl implements TaskMapper {
         taskResponse.setDownloadFile(task.getDownloadFile()!=null?fileMapper.toDto(task.getDownloadFile()):null);
         taskResponse.setIsSolved(false);
 
+
+        return taskResponse;
+
+    }
+    @Override
+    public TaskResponse toDto(Task task) {
+        TaskResponse taskResponse = new TaskResponse();
+        taskResponse.setId(task.getId());
+        taskResponse.setTaskCreator(task.getTaskCreator());
+        taskResponse.setName(task.getName());
+        taskResponse.setDescription(task.getDescription());
+        taskResponse.setPoints(task.getPoints());
+        taskResponse.setReleaseDate(task.getReleaseDate());
+        taskResponse.setSubmitFlag(task.getSubmitFlag());
+        taskResponse.setUserSolves(task.getUserSolves());
+        taskResponse.setCountLike(task.getLikedHackers().size());
+        taskResponse.setCountDislike(task.getDislikedHackers().size());
+
+        taskResponse.setCategoryName(task.getCategory()!=null? task.getCategory().getName():null);
+        taskResponse.setLevelName(task.getLevel()!=null? task.getLevel().getName(): null);
+        taskResponse.setDownloadFile(task.getDownloadFile()!=null?fileMapper.toDto(task.getDownloadFile()):null);
+        taskResponse.setIsSolved(false);
 
         return taskResponse;
 

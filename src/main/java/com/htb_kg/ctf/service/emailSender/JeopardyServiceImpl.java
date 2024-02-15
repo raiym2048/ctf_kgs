@@ -2,6 +2,7 @@ package com.htb_kg.ctf.service.emailSender;
 
 import com.htb_kg.ctf.dto.event.jeopardy.JeopardyCreateRequest;
 import com.htb_kg.ctf.dto.event.jeopardy.JeopardyResponse;
+import com.htb_kg.ctf.dto.task.TaskResponse;
 import com.htb_kg.ctf.entities.*;
 import com.htb_kg.ctf.enums.Role;
 import com.htb_kg.ctf.exception.BadCredentialsException;
@@ -15,6 +16,7 @@ import com.htb_kg.ctf.repositories.event.EventRepository;
 import com.htb_kg.ctf.repositories.event.EventStatusRepository;
 import com.htb_kg.ctf.repositories.event.EventTypeRepository;
 import com.htb_kg.ctf.service.JeopardyService;
+import com.htb_kg.ctf.service.TaskService;
 import com.htb_kg.ctf.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,7 @@ public class JeopardyServiceImpl implements JeopardyService {
     private final EventRepository eventRepository;
     private final TaskRepository taskRepository;
     private final JeopardyMapper jeopardyMapper;
+    private final TaskService taskService;
 
     @Override
     public String create(JeopardyCreateRequest createRequest, String token) {
@@ -67,6 +70,13 @@ public class JeopardyServiceImpl implements JeopardyService {
     @Override
     public List<JeopardyResponse> getAll() {
         return jeopardyMapper.toDtoS(eventRepository.findAll());
+    }
+
+    @Override
+    public List<TaskResponse> eventTasks(Long eventId, String token) {
+        User user = userService.getUsernameFromToken(token);
+
+        return taskService.getAllEventTasks(eventId);
     }
 
     private List<Task> findChallenges(List<Long> challengeIds) {
