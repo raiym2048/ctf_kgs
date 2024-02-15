@@ -4,6 +4,7 @@ import com.htb_kg.ctf.dto.hint.HintTexts;
 import com.htb_kg.ctf.dto.task.*;
 import com.htb_kg.ctf.entities.*;
 import com.htb_kg.ctf.enums.Role;
+import com.htb_kg.ctf.exception.BadCredentialsException;
 import com.htb_kg.ctf.exception.BadRequestException;
 import com.htb_kg.ctf.exception.NotFoundException;
 import com.htb_kg.ctf.mapper.TaskMapper;
@@ -91,7 +92,7 @@ public class TaskServiceImpl implements TaskService {
 
         System.out.println("the size:"+answeredTasks.size());
 
-        return taskMapper.toDtoS(taskRepository.findAllByType(false), answeredTasks, hacker);
+        return taskMapper.toDtoS(taskRepository.findAllByIsPrivate(false), answeredTasks, hacker);
     }
 
     @Override
@@ -104,7 +105,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskResponse> filter(Boolean s1, Boolean s2, Boolean s3, String token) {
-        List<Task> tasks = taskRepository.findAllByType(false);
+        List<Task> tasks = taskRepository.findAllByIsPrivate(false);
         User user = userService.getUsernameFromToken(token);
         if (!user.getRole().equals(Role.HACKER))
             throw new BadRequestException("only hacker can!");
@@ -294,7 +295,7 @@ public class TaskServiceImpl implements TaskService {
             OpenedHints openedHints = new OpenedHints();
             openedHints.setHint(hint.get());
             openedHints.setHacker(hacker);
-            openedHints.setTask(taskRepository.findByHintsIdAndType(id, false).orElseThrow());
+            openedHints.setTask(taskRepository.findByHintsIdAndIsPrivate(id, false).orElseThrow());
             openedHintsRepository.save(openedHints);
             user.getHacker().setPoints(user.getHacker().getPoints()-10);
             userRepository.save(user);
@@ -309,7 +310,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskResponse> byCategory(String request, String token) {
-        List<Task> tasks = taskRepository.findAllByCategoryNameAndType(request, false);
+        List<Task> tasks = taskRepository.findAllByCategoryNameAndIsPrivate(request, false);
         User user = userService.getUsernameFromToken(token);
         if (!user.getRole().equals(Role.HACKER))
             throw new BadRequestException("only hacker can!");
@@ -324,10 +325,10 @@ public class TaskServiceImpl implements TaskService {
         List<Task> tasks = new ArrayList<>();
         if (!searchRequest.matches(".*\\w.*")){
             System.out.println("its an empty!");
-            tasks= taskRepository.findAllByType(false);
+            tasks= taskRepository.findAllByIsPrivate(false);
         }
         else {
-            tasks = taskRepository.findAllByNameContainingAndType(searchRequest, false);
+            tasks = taskRepository.findAllByNameContainingAndIsPrivate(searchRequest, false);
 
         }
         User user = userService.getUsernameFromToken(token);
@@ -347,6 +348,47 @@ public class TaskServiceImpl implements TaskService {
 
 
         return taskMapper.toDtoS(event.get().getChallenges());
+    }
+
+    @Override
+    public List<TaskResponse> privateTasks(String token) {
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.ADMIN))
+            throw new BadRequestException("only admin can view private tasks!");
+
+        return taskMapper.toDtoS(taskRepository.findAllByIsPrivate(true));
+    }
+
+    @Override
+    public void setTaskPublic(ListId listId, String token) {
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.ADMIN))
+            throw new BadCredentialsException("only admin can change type of task!");
+        for (Long id: listId.getIds()){
+            Optional<Task> task = taskRepository.findById(id);
+            if (task.isEmpty())
+                throw new BadRequestException("no task with id: "+id+"!");
+            if(!task.get().getIsPrivate())
+                throw new BadRequestException("task with id: "+id+" is already public!");
+            task.get().setIsPrivate(false);
+            taskRepository.save(task.get());
+        }
+    }
+
+    @Override
+    public void setTaskPrivate(ListId listId, String token) {
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.ADMIN))
+            throw new BadCredentialsException("only admin can change type of task!");
+        for (Long id: listId.getIds()){
+            Optional<Task> task = taskRepository.findById(id);
+            if (task.isEmpty())
+                throw new BadRequestException("no task with id: "+id+"!");
+            if(task.get().getIsPrivate())
+                throw new BadRequestException("task with id: "+id+" is already private!");
+            task.get().setIsPrivate(true);
+            taskRepository.save(task.get());
+        }
     }
 
     private Task requestToEntity(TaskRequest taskRequest) {

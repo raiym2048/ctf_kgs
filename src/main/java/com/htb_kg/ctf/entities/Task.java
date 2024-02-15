@@ -18,7 +18,7 @@ public class Task {
     @Id
     private Long id;
 
-    private Boolean type = false;
+    private Boolean isPrivate = false;
 
     private String name;
     private String description;

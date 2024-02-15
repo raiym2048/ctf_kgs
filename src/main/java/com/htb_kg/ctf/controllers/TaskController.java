@@ -1,7 +1,6 @@
 package com.htb_kg.ctf.controllers;
 
 
-import com.htb_kg.ctf.dto.category.CategoryResponse;
 import com.htb_kg.ctf.dto.task.*;
 import com.htb_kg.ctf.entities.Task;
 import com.htb_kg.ctf.repositories.TaskRepository;
@@ -85,6 +84,22 @@ public class TaskController {
     @GetMapping("/getAllTasksAnonymous")
     public List<Task> tasks(){
         return taskRepository.findAll();
+    }
+
+
+    @GetMapping("/private/tasks")
+    public List<TaskResponse> privateTasks(@RequestHeader("Authorization") String token){
+        return taskService.privateTasks(token);
+    }
+
+    @PostMapping("/set/public")
+    public void setPublic(@RequestBody ListId listId, @RequestHeader("Authorization") String token){
+        taskService.setTaskPublic(listId, token);
+    }
+
+    @PostMapping("/set/private")
+    public void setPrivate(@RequestBody ListId listId, @RequestHeader("Authorization") String token){
+        taskService.setTaskPrivate(listId, token);
     }
 
 

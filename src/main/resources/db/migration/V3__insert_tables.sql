@@ -126,27 +126,27 @@ values ('level4')
 insert into level (name)
 values ('level5')
 ;
-insert into task (type, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
+insert into task (is_private, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
                   task_creator, user_solves)
 values (false, 1, 'desc', null, 1, 'task1', 500, '22.12.2023', 'submit_flag', 'some creator', 0)
 ;
-insert into task (type, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
+insert into task (is_private, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
                   task_creator, user_solves)
 values (false, 2, 'desc', null, 2, 'task1', 500, '22.12.2023', 'submit_flag', 'some creator', 0)
 ;
-insert into task (type, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
+insert into task (is_private, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
                   task_creator, user_solves)
 values (false, 3, 'desc', null, 3, 'task1', 500, '22.12.2023', 'submit_flag', 'some creator', 0)
 ;
-insert into task (type, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
+insert into task (is_private, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
                   task_creator, user_solves)
 values (false, 4, 'desc', null, 4, 'task1', 500, '22.12.2023', 'submit_flag', 'some creator', 0)
 ;
-insert into task (type, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
+insert into task (is_private, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
                   task_creator, user_solves)
 values (true, 4, 'desc', null, 1, 'task1', 500, '22.12.2023', 'submit_flag', 'some creator', 0)
 ;
-insert into task (type, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
+insert into task (is_private, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
                   task_creator, user_solves)
 values (true, 3, 'desc', null, 1, 'task1', 500, '22.12.2023', 'submit_flag', 'some creator', 0)
 ;

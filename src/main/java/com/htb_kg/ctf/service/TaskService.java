@@ -1,14 +1,8 @@
 package com.htb_kg.ctf.service;
 
-import com.htb_kg.ctf.dto.category.CategoryResponse;
-import com.htb_kg.ctf.dto.hint.HintTexts;
 import com.htb_kg.ctf.dto.task.*;
-import com.htb_kg.ctf.entities.Hacker;
-import com.htb_kg.ctf.entities.Hint;
-import com.htb_kg.ctf.entities.Task;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TaskService {
     void addTask(TaskRequest taskRequest, String token);
@@ -37,4 +31,10 @@ public interface TaskService {
     List<TaskResponse> search(String searchRequest, String token);
 
     List<TaskResponse> getAllEventTasks(Long eventId);
+
+    List<TaskResponse> privateTasks(String token);
+
+    void setTaskPublic(ListId listId, String token);
+
+    void setTaskPrivate(ListId listId, String token);
 }

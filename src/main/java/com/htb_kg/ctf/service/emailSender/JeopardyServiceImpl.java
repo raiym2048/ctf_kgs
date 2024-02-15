@@ -85,7 +85,7 @@ public class JeopardyServiceImpl implements JeopardyService {
             Optional<Task> task = taskRepository.findById(i);
             if (task.isEmpty())
                 throw new BadRequestException("the task with id:"+i+"not found!");
-            task.get().setType(true);
+            task.get().setIsPrivate(true);
             taskRepository.save(task.get());
             challenges.add(task.get());
         }
