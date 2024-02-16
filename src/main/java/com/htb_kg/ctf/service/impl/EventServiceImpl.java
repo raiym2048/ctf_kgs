@@ -115,6 +115,43 @@ public class EventServiceImpl implements EventService {
             return jeopardyMapper.toDtoS(upcomingEvents);
     }
 
+    @Override
+    public List<JeopardyResponse> hackerPastEvents(String token) {
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.HACKER))
+            throw new BadRequestException("only hackers have an pasted(finished) events!");
+
+        return jeopardyMapper.toDtoS(user.getHacker().getHackerPastEvents());
+    }
+
+    @Override
+    public void joinHacker(Long eventId, String token) {
+        Optional<Event> event = eventRepository.findById(eventId);
+        if (event.isEmpty())
+            throw new BadRequestException("no event with id: "+ eventId+"!");
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.HACKER))
+            throw new BadRequestException("only hackers can join to event!");
+        List<Hacker> joinedHackers = event.get().getJoinedHackers();
+        if (joinedHackers.isEmpty())
+            joinedHackers = new ArrayList<>();
+        joinedHackers.add(user.getHacker());
+        event.get().setJoinedHackers(joinedHackers);
+        eventRepository.save(event.get());
+    }
+
+    @Override
+    public List<JeopardyResponse> hackerJoinedEvents(String token) {
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.HACKER))
+            throw new BadRequestException("only hackers can view their joined events!");
+        List<Hacker> hackers = new ArrayList<>();
+        hackers.add(user.getHacker());
+        List<Event> hackerJoinedEvents = eventRepository.findEventsByJoinedHackers(hackers);
+
+        return jeopardyMapper.toDtoS(hackerJoinedEvents);
+    }
+
 
     private List<Task> findChallenges(List<Long> challengeIds) {
         List<Task> challenges = new ArrayList<>();

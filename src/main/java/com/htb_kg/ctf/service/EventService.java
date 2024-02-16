@@ -20,4 +20,10 @@ public interface EventService {
     List<JeopardyResponse> ongoing();
 
     List<JeopardyResponse> upcoming();
+
+    List<JeopardyResponse> hackerPastEvents(String token);
+
+    void joinHacker(Long eventId, String token);
+
+    List<JeopardyResponse> hackerJoinedEvents(String token);
 }

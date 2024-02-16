@@ -45,6 +45,16 @@ public class EventController {
         return eventService.upcoming();
     }
 
+    @PostMapping("/join/{eventId}")
+    public void joinToEvent(@PathVariable Long eventId, @RequestHeader("Authorization") String token){
+        eventService.joinHacker(eventId, token);
+    }
+
+    @GetMapping("/joined")
+    public List<JeopardyResponse> joinedEvents(@RequestHeader("Authorization") String token){
+        return eventService.hackerJoinedEvents(token);
+    }
+
 
 
 }

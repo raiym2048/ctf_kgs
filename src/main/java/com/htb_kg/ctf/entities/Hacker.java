@@ -33,4 +33,7 @@ public class Hacker {
 
     @ManyToMany()
     private List<Task> answeredTasks;
+
+    @ManyToMany()
+    private List<Event> hackerPastEvents;
 }

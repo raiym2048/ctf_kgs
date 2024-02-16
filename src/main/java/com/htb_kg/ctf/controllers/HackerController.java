@@ -60,6 +60,12 @@ public class HackerController {
         return taskService.hackerSubmittedTasks(token);
     }
 
+    @GetMapping("/events/past")
+    public List<JeopardyResponse> pastEvents(@RequestHeader("Authorization") String token){
+        return eventService.hackerPastEvents(token);
+    }
+
+
 
 
 }
