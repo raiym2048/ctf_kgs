@@ -16,6 +16,8 @@
     ; alter table if exists hacker_table_answered_tasks add constraint FKebu5chi6ldjvmodypmurl3j9e foreign key (hacker_id) references hacker_table
     ; alter table if exists hacker_table_favorites add constraint FKt65mhu1atmsmhab8v8aev2qb4 foreign key (favorites_id) references task
     ; alter table if exists hacker_table_favorites add constraint FKeteyac8i4jj7i1h6lw8mji2yl foreign key (hacker_id) references hacker_table
+    ; alter table if exists hacker_table_hacker_past_events add constraint FK86fi8d4xm4xljq7y9tqeyj686 foreign key (hacker_past_events_id) references event
+    ; alter table if exists hacker_table_hacker_past_events add constraint FKs6pcprj4b7sc4wqhlwkw61rt9 foreign key (hacker_id) references hacker_table
     ; alter table if exists hacker_task_answer_history add constraint FK22itnmyilksorl53rn7hry4dn foreign key (hacker_id) references hacker_table
     ; alter table if exists hacker_task_answer_history add constraint FK8l10u2f6hvio2gwfyjhg1ksw foreign key (task_id) references task
     ; alter table if exists hint add constraint FKoxsujse5pqgqab1j10y348sfl foreign key (task_id) references task

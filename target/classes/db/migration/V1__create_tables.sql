@@ -12,6 +12,7 @@
     ; create table hacker_table (level integer, points integer, id bigserial not null, primary key (id))
     ; create table hacker_table_answered_tasks (answered_tasks_id bigint not null, hacker_id bigint not null)
     ; create table hacker_table_favorites (favorites_id bigint not null, hacker_id bigint not null)
+    ; create table hacker_table_hacker_past_events (hacker_id bigint not null, hacker_past_events_id bigint not null)
     ; create table hacker_task_answer_history (hacker_id bigint, id bigserial not null, task_id bigint, time varchar(255), primary key (id))
     ; create table hint (usable boolean, id bigserial not null, task_id bigint, title varchar(255), primary key (id))
     ; create table jeopardy (id bigserial not null, primary key (id))

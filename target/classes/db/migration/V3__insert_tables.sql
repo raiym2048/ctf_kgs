@@ -22,6 +22,9 @@ values ('upcoming')
 insert into event_status (title)
 values ('past')
 ;
+insert into event_status (title)
+values ('joined')
+;
 insert into location (title)
 values ('online')
 ;
