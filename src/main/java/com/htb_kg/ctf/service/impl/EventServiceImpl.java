@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -86,18 +87,32 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<JeopardyResponse> pastEvents() {
+        List<Event> pastEvents = eventRepository.findByEndDateBefore(LocalDateTime.now());
+        pastEvents.forEach(event -> {
+            event.setEventStatus(eventStatusRepository.findByTitle("past").get()); // Assuming 'setStatus' is a method in your Event entity
+            eventRepository.save(event); // Save each event after setting the status
+        });
 
-        return jeopardyMapper.toDtoS(eventRepository.findByEndDateBefore(LocalDateTime.now()));
+        return jeopardyMapper.toDtoS(pastEvents);
     }
 
     @Override
     public List<JeopardyResponse> ongoing() {
-        return jeopardyMapper.toDtoS(eventRepository.findAllByStartDateBeforeAndEndDateAfter(LocalDateTime.now(), LocalDateTime.now()));
+        List<Event> ongoingEvents = eventRepository.findAllByStartDateBeforeAndEndDateAfter(LocalDateTime.now(), LocalDateTime.now());
+        ongoingEvents.forEach(event -> {
+            event.setEventStatus(eventStatusRepository.findByTitle("ongoing").get()); // Assuming 'setStatus' is a method in your Event entity
+            eventRepository.save(event); // Save each event after setting the status
+        });        return jeopardyMapper.toDtoS(ongoingEvents);
     }
 
     @Override
     public List<JeopardyResponse> upcoming() {
-        return jeopardyMapper.toDtoS(eventRepository.findAllByStartDateAfter(LocalDateTime.now()));
+        List<Event> upcomingEvents = eventRepository.findAllByStartDateAfter(LocalDateTime.now());
+        upcomingEvents.forEach(event -> {
+            event.setEventStatus(eventStatusRepository.findByTitle("upcoming").get()); // Assuming 'setStatus' is a method in your Event entity
+            eventRepository.save(event); // Save each event after setting the status
+        });
+            return jeopardyMapper.toDtoS(upcomingEvents);
     }
 
 
