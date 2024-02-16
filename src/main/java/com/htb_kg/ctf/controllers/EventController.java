@@ -30,6 +30,21 @@ public class EventController {
         return eventService.eventTasks(eventId, token);
     }
 
+    @GetMapping("/past")
+    public List<JeopardyResponse> pastEvents(){
+        return eventService.pastEvents();
+    }
+
+    @GetMapping("/ongoing")
+    public List<JeopardyResponse> ongoing(){
+        return eventService.ongoing();
+    }
+
+    @GetMapping("/upcoming")
+    public List<JeopardyResponse> upcoming(){
+        return eventService.upcoming();
+    }
+
 
 
 }

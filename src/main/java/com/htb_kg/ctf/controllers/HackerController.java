@@ -60,14 +60,6 @@ public class HackerController {
         return taskService.hackerSubmittedTasks(token);
     }
 
-    @GetMapping("/event/past/count")
-    public Integer pastEventsCount(@RequestHeader("Authorization") String token){
-        return eventService.pastCount(token);
-    }
 
-    @GetMapping("/events/past")
-    public List<JeopardyResponse> pastEvents(@RequestHeader("Authorization") String token){
-        return eventService.pastEvents(token);
-    }
 
 }

@@ -15,5 +15,9 @@ public interface EventService {
 
     Integer pastCount(String token);
 
-    List<JeopardyResponse> pastEvents(String token);
+    List<JeopardyResponse> pastEvents();
+
+    List<JeopardyResponse> ongoing();
+
+    List<JeopardyResponse> upcoming();
 }

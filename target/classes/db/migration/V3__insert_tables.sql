@@ -1,79 +1,36 @@
 insert into event_type (title)
-values ('event_type1')
+values ('private')
 ;
 insert into event_type (title)
-values ('event_type2')
+values ('public')
 ;
 insert into event_type (title)
-values ('event_type3')
-;
-insert into event_type (title)
-values ('event_type4')
-;
-insert into event_type (title)
-values ('event_type5')
-;
-insert into event_type (title)
-values ('event_type6')
-;
-insert into event_type (title)
-values ('event_type7')
-;
-insert into event_type (title)
-values ('event_type8')
-;
-insert into event_type (title)
-values ('event_type9')
-;
-insert into event_type (title)
-values ('event_type10')
+values ('archive')
 ;
 insert into event_format (title)
-values ('event_format1')
+values ('sherlock')
 ;
 insert into event_format (title)
-values ('event_format2')
-;
-insert into event_format (title)
-values ('event_format3')
-;
-insert into event_format (title)
-values ('event_format4')
-;
-insert into event_format (title)
-values ('event_format5')
+values ('jeopardy')
 ;
 insert into event_status (title)
-values ('event_status1')
+values ('ongoing')
 ;
 insert into event_status (title)
-values ('event_status2')
+values ('upcoming')
 ;
 insert into event_status (title)
-values ('event_status3')
-;
-insert into event_status (title)
-values ('event_status4')
-;
-insert into event_status (title)
-values ('event_status5')
+values ('past')
 ;
 insert into location (title)
-values ('location1')
+values ('online')
 ;
 insert into location (title)
-values ('location2')
+values ('offline')
 ;
 insert into location (title)
-values ('location3')
+values ('Bishkek, ankara 1/8')
 ;
-insert into location (title)
-values ('location4')
-;
-insert into location (title)
-values ('location5')
-;
-
 
 insert into category (name)
 values ('Web')
@@ -112,19 +69,19 @@ insert into category (name)
 values ('Mobile')
 ;
 insert into level (name)
-values ('level1')
+values ('1')
 ;
 insert into level (name)
-values ('level2')
+values ('2')
 ;
 insert into level (name)
-values ('level3')
+values ('3')
 ;
 insert into level (name)
-values ('level4')
+values ('4')
 ;
 insert into level (name)
-values ('level5')
+values ('5')
 ;
 insert into task (is_private, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
                   task_creator, user_solves)
@@ -132,21 +89,21 @@ values (false, 1, 'desc', null, 1, 'task1', 500, NOW(), 'submit_flag', 'some cre
 ;
 insert into task (is_private, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
                   task_creator, user_solves)
-values (false, 2, 'desc', null, 2, 'task1', 500, NOW(), 'submit_flag', 'some creator', 0)
+values (false, 2, 'desc', null, 2, 'task2', 500, NOW(), 'submit_flag', 'some creator', 0)
 ;
 insert into task (is_private, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
                   task_creator, user_solves)
-values (false, 3, 'desc', null, 3, 'task1', 500, NOW(), 'submit_flag', 'some creator', 0)
+values (false, 3, 'desc', null, 3, 'task3', 500, NOW(), 'submit_flag', 'some creator', 0)
 ;
 insert into task (is_private, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
                   task_creator, user_solves)
-values (false, 4, 'desc', null, 4, 'task1', 500, NOW(), 'submit_flag', 'some creator', 0)
+values (false, 4, 'desc', null, 4, 'task4', 500, NOW(), 'submit_flag', 'some creator', 0)
 ;
 insert into task (is_private, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
                   task_creator, user_solves)
-values (true, 4, 'desc', null, 1, 'task1', 500, NOW(), 'submit_flag', 'some creator', 0)
+values (true, 4, 'desc', null, 1, 'task5', 500, NOW(), 'submit_flag', 'some creator', 0)
 ;
 insert into task (is_private, category_id, description, download_file_id, level_id, name, points, release_date, submit_flag,
                   task_creator, user_solves)
-values (true, 3, 'desc', null, 1, 'task1', 500, NOW(), 'submit_flag', 'some creator', 0)
+values (true, 3, 'desc', null, 1, 'task6', 500, NOW(), 'submit_flag', 'some creator', 0)
 ;

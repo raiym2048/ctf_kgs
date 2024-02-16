@@ -85,11 +85,21 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<JeopardyResponse> pastEvents(String token) {
-        User user = userService.getUsernameFromToken(token);
+    public List<JeopardyResponse> pastEvents() {
 
         return jeopardyMapper.toDtoS(eventRepository.findByEndDateBefore(LocalDateTime.now()));
     }
+
+    @Override
+    public List<JeopardyResponse> ongoing() {
+        return jeopardyMapper.toDtoS(eventRepository.findAllByStartDateBeforeAndEndDateAfter(LocalDateTime.now(), LocalDateTime.now()));
+    }
+
+    @Override
+    public List<JeopardyResponse> upcoming() {
+        return jeopardyMapper.toDtoS(eventRepository.findAllByStartDateAfter(LocalDateTime.now()));
+    }
+
 
     private List<Task> findChallenges(List<Long> challengeIds) {
         List<Task> challenges = new ArrayList<>();
