@@ -10,10 +10,7 @@ import com.htb_kg.ctf.exception.NotFoundException;
 import com.htb_kg.ctf.mapper.TaskMapper;
 import com.htb_kg.ctf.repositories.*;
 import com.htb_kg.ctf.repositories.event.EventRepository;
-import com.htb_kg.ctf.service.CategoryService;
-import com.htb_kg.ctf.service.LevelService;
-import com.htb_kg.ctf.service.TaskService;
-import com.htb_kg.ctf.service.UserService;
+import com.htb_kg.ctf.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -21,7 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +41,7 @@ public class TaskServiceImpl implements TaskService {
     private final OpenedHintsRepository openedHintsRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
+    private final FileDataService fileService;
 
     @Override
     public void addTask(TaskRequest taskRequest, String token) {
@@ -78,7 +78,7 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.updateTaskAttributes(taskId,
                 taskRequest.getName(), taskRequest.getDescription(), taskRequest.getPoints(),taskRequest.getLevelName().isEmpty()?null: levelRepository.findByName(taskRequest.getLevelName()).get(),
                 taskRequest.getUserSolves(),taskRequest.getCategoryName().isEmpty()?null: categoryRepository.findCategoryByName(taskRequest.getCategoryName()).get(),
-                taskRequest.getReleaseDate(), taskRequest.getTaskCreator(),
+                LocalDateTime.now(), taskRequest.getTaskCreator(),
                 taskRequest.getSubmitFlag());
     }
 
@@ -412,6 +412,19 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.toDtoS(user.getHacker().getAnsweredTasks(), user.getHacker());
     }
 
+    @Override
+    public void createTaskWithFile(TaskRequest taskRequest, String token, MultipartFile file) {
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.ADMIN))
+            throw new BadRequestException("only admins can add task!");
+        Task task = requestToEntity(taskRequest);
+        task.setHints(setHintTask(taskRequest.getHintRequests()));
+        task.setDownloadFile(fileService.uploadFile(file, token));
+
+
+        taskRepository.save(task);
+    }
+
 
     private Task requestToEntity(TaskRequest taskRequest) {
         Task task = new Task();
@@ -419,7 +432,7 @@ public class TaskServiceImpl implements TaskService {
         task.setTaskCreator(taskRequest.getTaskCreator());
         task.setPoints(taskRequest.getPoints());
         task.setDescription(taskRequest.getDescription());
-        task.setReleaseDate(taskRequest.getReleaseDate());
+        task.setReleaseDate(LocalDateTime.now());
         task.setSubmitFlag(taskRequest.getSubmitFlag());
         task.setUserSolves(taskRequest.getUserSolves());
         task.setLevel(!taskRequest.getLevelName().isBlank()? levelService.findByName(taskRequest.getLevelName()):null);

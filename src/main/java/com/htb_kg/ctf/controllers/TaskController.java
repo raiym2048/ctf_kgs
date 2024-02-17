@@ -1,12 +1,15 @@
 package com.htb_kg.ctf.controllers;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.htb_kg.ctf.dto.task.*;
 import com.htb_kg.ctf.entities.Task;
 import com.htb_kg.ctf.repositories.TaskRepository;
 import com.htb_kg.ctf.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -55,6 +58,14 @@ public class TaskController {
 
         taskService.addTask(taskRequest, token);
     }
+    @PostMapping("/create")
+    public void createTaskWithFile(@RequestParam("file") MultipartFile file,
+                                   @RequestParam("taskRequest") String taskRequestJson, @RequestHeader("Authorization") String token) throws JsonProcessingException {
+        TaskRequest taskRequest = new ObjectMapper().readValue(taskRequestJson, TaskRequest.class);
+
+        taskService.createTaskWithFile(taskRequest, token, file);
+    }
+
 
     @PostMapping("/open/hint/{id}")
     public String openHint(@PathVariable Long id, @RequestHeader("Authorization") String token){

@@ -13,7 +13,6 @@ public class TaskRequest {
     private String levelName;
     private Integer userSolves;
     private String categoryName;
-    private LocalDateTime releaseDate;
     private String taskCreator;
     private Integer points;
     private String submitFlag;

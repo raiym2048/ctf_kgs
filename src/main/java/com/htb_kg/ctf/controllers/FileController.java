@@ -16,7 +16,7 @@ import java.io.IOException;
 public class FileController {
     private final FileDataService fileDataService;
 
-    @PostMapping("/user_logo/upload")
+    @PostMapping("/upload")
     public void downloadFile(@RequestHeader("Authorization") String token,@RequestPart MultipartFile file) throws IOException {
         fileDataService.uploadFile(file, token);
     }
