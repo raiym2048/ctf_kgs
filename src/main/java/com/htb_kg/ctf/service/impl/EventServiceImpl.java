@@ -97,6 +97,21 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public List<JeopardyResponse> pastEvents(String token) {
+        User user = userService.getUsernameFromToken(token);
+        List<Event> pastEvents = eventRepository.findByEndDateBefore(LocalDateTime.now());
+        pastEvents.forEach(event -> {
+            event.setEventStatus(eventStatusRepository.findByTitle("past").get()); // Assuming 'setStatus' is a method in your Event entity
+            eventRepository.save(event); // Save each event after setting the status
+        });
+
+        if (!user.getRole().equals(Role.HACKER))
+            throw new BadRequestException("only hackers can view events!");
+
+        return jeopardyMapper.toDtoS(pastEvents, user.getHacker());
+    }
+
+    @Override
     public List<JeopardyResponse> ongoing() {
         List<Event> ongoingEvents = eventRepository.findAllByStartDateBeforeAndEndDateAfter(LocalDateTime.now(), LocalDateTime.now());
         ongoingEvents.forEach(event -> {
@@ -150,6 +165,18 @@ public class EventServiceImpl implements EventService {
         List<Event> hackerJoinedEvents = eventRepository.findEventsByJoinedHackers(hackers);
 
         return jeopardyMapper.toDtoS(hackerJoinedEvents);
+    }
+
+    @Override
+    public JeopardyResponse getById(String token, Long eventId) {
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.HACKER))
+            throw new BadRequestException("only hackers can view event!");
+        Optional<Event> event = eventRepository.findById(eventId);
+        if (event.isEmpty())
+            throw new BadRequestException("no event with id: "+eventId+"!");
+
+        return jeopardyMapper.toDto(event.get());
     }
 
 

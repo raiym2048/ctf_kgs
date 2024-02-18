@@ -4,14 +4,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 public class JeopardyResponse {
     private Long jeopardyId;
     private String title;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private Boolean joined;
+    private List<Integer> startDate;
+    private List<Integer> endDate;
     private String eventStatus;
     private String eventType;
     private String eventFormat;

@@ -16,6 +16,11 @@ import java.util.List;
 public class EventController {
     private final EventService eventService;
 
+    @GetMapping("/{eventId}")
+    public JeopardyResponse byId(@RequestHeader("Authorization") String token, @PathVariable Long eventId){
+        return eventService.getById(token, eventId);
+    }
+
     @PostMapping("/create")
     public String create(@RequestBody JeopardyCreateRequest createRequest, @RequestHeader("Authorization") String token){
         return eventService.create(createRequest, token);
@@ -31,8 +36,11 @@ public class EventController {
     }
 
     @GetMapping("/past")
-    public List<JeopardyResponse> pastEvents(){
-        return eventService.pastEvents();
+    public List<JeopardyResponse> pastEvents(@RequestHeader("Authorization") String token){
+        if (token.isEmpty()){
+            return eventService.pastEvents();
+        }
+        return eventService.pastEvents(token);
     }
 
     @GetMapping("/ongoing")

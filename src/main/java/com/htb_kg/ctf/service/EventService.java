@@ -16,6 +16,7 @@ public interface EventService {
     Integer pastCount(String token);
 
     List<JeopardyResponse> pastEvents();
+    List<JeopardyResponse> pastEvents(String token);
 
     List<JeopardyResponse> ongoing();
 
@@ -26,4 +27,6 @@ public interface EventService {
     void joinHacker(Long eventId, String token);
 
     List<JeopardyResponse> hackerJoinedEvents(String token);
+
+    JeopardyResponse getById(String token, Long eventId);
 }
