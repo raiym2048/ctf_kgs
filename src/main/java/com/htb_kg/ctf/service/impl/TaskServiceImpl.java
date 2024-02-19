@@ -446,7 +446,7 @@ public class TaskServiceImpl implements TaskService {
             }
         }
 
-        return taskMapper.toDtoS(searchedTasks);
+        return taskMapper.toDtoS(searchedTasks, hacker);
     }
 
     @Override
@@ -472,7 +472,7 @@ public class TaskServiceImpl implements TaskService {
                 }
             }
         }
-        List<TaskResponse> result = taskMapper.toDtoS(searchedTasks);
+        List<TaskResponse> result = taskMapper.toDtoS(searchedTasks, hacker);
         System.out.println("\n\n\nthe size of list: "+result.size());
         return result;
     }
