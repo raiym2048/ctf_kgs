@@ -75,7 +75,7 @@ public class EventServiceImpl implements EventService {
         User user = userService.getUsernameFromToken(token);
 
 
-        return taskService.getAllEventTasks(eventId);
+        return taskService.getAllEventTasks(eventId, user.getHacker());
     }
 
     @Override

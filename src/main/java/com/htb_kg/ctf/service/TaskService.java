@@ -33,7 +33,7 @@ public interface TaskService {
 
     List<TaskResponse> search(String searchRequest, String token);
 
-    List<TaskResponse> getAllEventTasks(Long eventId);
+    List<TaskResponse> getAllEventTasks(Long eventId, Hacker hacker);
 
     List<TaskResponse> privateTasks(String token);
 

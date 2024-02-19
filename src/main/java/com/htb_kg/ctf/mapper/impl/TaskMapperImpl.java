@@ -83,7 +83,13 @@ public class TaskMapperImpl implements TaskMapper {
         taskResponse.setCategoryName(task.getCategory()!=null? task.getCategory().getName():null);
         taskResponse.setLevelName(task.getLevel()!=null? task.getLevel().getName(): null);
         taskResponse.setDownloadFile(task.getDownloadFile()!=null?fileMapper.toDto(task.getDownloadFile()):null);
-        taskResponse.setIsSolved(b);
+        if (!hacker.getAnsweredTasks().contains(task)){
+            System.out.println("its false\n\n\n");
+            taskResponse.setIsSolved(false);
+        }else {
+            System.out.println("its true\n\n\n");
+            taskResponse.setIsSolved(true);
+        }
 
 //        taskResponse.setHintResponse(hintMapper.toResponses(task.getHints()));
 //        if (task.getHints()!=null){
@@ -121,7 +127,6 @@ public class TaskMapperImpl implements TaskMapper {
                 likeResponse.setLike(false);
                 likeResponse.setDisLike(false);
             }
-            if (task.getLikedHackers().contains(hacker)){
                 if (hacker.getFavorites().contains(task)){
                     taskResponses.add(toDto(task, false,likeResponse, true, hacker));
                 }
@@ -130,7 +135,6 @@ public class TaskMapperImpl implements TaskMapper {
 
                 }
 
-            }
 
         }
         return taskResponses;

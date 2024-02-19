@@ -347,13 +347,15 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskResponse> getAllEventTasks(Long eventId) {
+    public List<TaskResponse> getAllEventTasks(Long eventId, Hacker hacker) {
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty())
             throw new NotFoundException("no event with id: "+eventId+"!", HttpStatus.BAD_REQUEST);
 
-
-        return taskMapper.toDtoS(event.get().getChallenges());
+        List<TaskResponse> taskResponses =  taskMapper.toDtoS(event.get().getChallenges(), hacker);
+        System.out.println("\n\n\nthe size of tasks in the event: "+event.get().getChallenges().size());
+        System.out.println("\n\n\n the size of taskresponse for event all tasks: " + taskResponses.size());
+        return taskResponses;
     }
 
     @Override
