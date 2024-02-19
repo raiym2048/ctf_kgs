@@ -190,6 +190,17 @@ public class EventServiceImpl implements EventService {
         return taskService.searchByChallenges(event.get().getChallenges(), user.getHacker(), search);
     }
 
+    @Override
+    public List<TaskResponse> searchByCategoryInEventChallenges(String token, Long eventId, String categoryName) {
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.HACKER))
+            throw new BadRequestException("only hackers can search challenges of event!");
+        Optional<Event> event = eventRepository.findById(eventId);
+        if (event.isEmpty())
+            throw new BadRequestException("not find event with id: "+eventId+"!");
+        return taskService.searchByCategoryChallenges(event.get().getChallenges(), user.getHacker(), categoryName);
+    }
+
 
     private List<Task> findChallenges(List<Long> challengeIds) {
         List<Task> challenges = new ArrayList<>();
