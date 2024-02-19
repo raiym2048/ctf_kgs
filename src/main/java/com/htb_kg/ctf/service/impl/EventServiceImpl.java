@@ -192,6 +192,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<TaskResponse> searchByCategoryInEventChallenges(String token, Long eventId, String categoryName) {
+        System.out.println("the category name: "+categoryName);
         User user = userService.getUsernameFromToken(token);
         if (!user.getRole().equals(Role.HACKER))
             throw new BadRequestException("only hackers can search challenges of event!");

@@ -442,7 +442,7 @@ public class TaskServiceImpl implements TaskService {
             }
         }
 
-        return taskMapper.toDtoS(searchedTasks,hacker);
+        return taskMapper.toDtoS(searchedTasks);
     }
 
     @Override
@@ -450,7 +450,7 @@ public class TaskServiceImpl implements TaskService {
         List<Task> searchedTasks = new ArrayList<>();
 
         if (!categoryName.matches(".*\\w.*")) {
-            System.out.println("its an empty!");
+            System.out.println("\n\n\nits an empty!");
             searchedTasks = challenges;
         } else {
             Optional<Category> category = categoryRepository.findCategoryByName(categoryName);
@@ -460,11 +460,17 @@ public class TaskServiceImpl implements TaskService {
             for (Task challenge : challenges) {
                 if (challenge.getCategory().getName().equals(categoryName)){
                     searchedTasks.add(challenge);
+                    System.out.println("\n\n\nits contain");
+                }
+                else {
+                    System.out.println("\n\n\nits not contain");
+
                 }
             }
         }
-
-        return taskMapper.toDtoS(searchedTasks, hacker);
+        List<TaskResponse> result = taskMapper.toDtoS(searchedTasks);
+        System.out.println("\n\n\nthe size of list: "+result.size());
+        return result;
     }
 
     private Task requestToEntity(TaskRequest taskRequest) {
