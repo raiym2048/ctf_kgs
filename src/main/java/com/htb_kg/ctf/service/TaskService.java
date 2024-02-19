@@ -49,4 +49,6 @@ public interface TaskService {
     void createTaskWithFile(TaskRequest taskRequest, String token, MultipartFile file);
 
     List<TaskResponse> searchByChallenges(List<Task> challenges, Hacker hacker, String search);
+
+    List<TaskResponse> searchByCategoryChallenges(List<Task> challenges, Hacker hacker, String categoryName);
 }

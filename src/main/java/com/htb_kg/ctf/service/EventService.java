@@ -31,4 +31,6 @@ public interface EventService {
     JeopardyResponse getById(String token, Long eventId);
 
     List<TaskResponse> searchByEventChallenges(String token, Long eventId, String seach);
+
+    List<TaskResponse> searchByCategoryInEventChallenges(String token, Long eventId, String categoryName);
 }

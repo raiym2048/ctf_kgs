@@ -68,6 +68,12 @@ public class EventController {
         return eventService.searchByEventChallenges(token, eventId, serach);
     }
 
+    @GetMapping("/{eventId}/challenges/search/byCategory")
+    public List<TaskResponse> seachByCategory(@RequestHeader("Authorization") String token,
+                                              @PathVariable Long eventId, @RequestParam(required = false) String categoryName){
+        return eventService.searchByCategoryInEventChallenges(token, eventId, categoryName);
+    }
+
 
 
 }

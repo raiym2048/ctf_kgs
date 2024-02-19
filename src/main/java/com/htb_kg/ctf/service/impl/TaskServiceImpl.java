@@ -445,6 +445,27 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.toDtoS(searchedTasks,hacker);
     }
 
+    @Override
+    public List<TaskResponse> searchByCategoryChallenges(List<Task> challenges, Hacker hacker, String categoryName) {
+        List<Task> searchedTasks = new ArrayList<>();
+
+        if (!categoryName.matches(".*\\w.*")) {
+            System.out.println("its an empty!");
+            searchedTasks = challenges;
+        } else {
+            Optional<Category> category = categoryRepository.findCategoryByName(categoryName);
+            if (category.isEmpty())
+                throw new BadRequestException("no category with this name! name: " + categoryName + "!");
+
+            for (Task challenge : challenges) {
+                if (challenge.getCategory().getName().equals(categoryName)){
+                    searchedTasks.add(challenge);
+                }
+            }
+        }
+
+        return taskMapper.toDtoS(searchedTasks, hacker);
+    }
 
     private Task requestToEntity(TaskRequest taskRequest) {
         Task task = new Task();
