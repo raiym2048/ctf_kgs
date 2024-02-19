@@ -243,7 +243,7 @@ public class EventServiceImpl implements EventService {
         return eventStatus.get();
     }
 
-    @Scheduled(fixedRate = 6000) // this will run the method every 60 seconds
+    @Scheduled(fixedRate = 600000) // this will run the method every 60 seconds
     public void endEvent(){
         System.out.println("its working every 6 second");
         LocalDateTime now = LocalDateTime.now();
