@@ -1,6 +1,8 @@
 package com.htb_kg.ctf.service;
 
 import com.htb_kg.ctf.dto.task.*;
+import com.htb_kg.ctf.entities.Hacker;
+import com.htb_kg.ctf.entities.Task;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -45,4 +47,6 @@ public interface TaskService {
     List<TaskResponse> hackerSubmittedTasks(String token);
 
     void createTaskWithFile(TaskRequest taskRequest, String token, MultipartFile file);
+
+    List<TaskResponse> searchByChallenges(List<Task> challenges, Hacker hacker, String search);
 }

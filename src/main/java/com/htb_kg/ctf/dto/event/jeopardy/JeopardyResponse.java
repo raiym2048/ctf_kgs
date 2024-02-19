@@ -1,5 +1,6 @@
 package com.htb_kg.ctf.dto.event.jeopardy;
 
+import com.htb_kg.ctf.dto.file.FileResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @Setter
 public class JeopardyResponse {
     private Long jeopardyId;
+    private FileResponse eventImage;
     private String title;
     private Boolean joined;
     private List<Integer> startDate;

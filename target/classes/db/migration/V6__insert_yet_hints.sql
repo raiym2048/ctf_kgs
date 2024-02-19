@@ -1,5 +1,5 @@
 insert into hint (usable, title) values
-                                     (false, 'title4'),
+                                     (false, 'Check the code'),
                                      (false, 'title5'),
                                      (false, 'title6'),
                                      (false, 'title7'),

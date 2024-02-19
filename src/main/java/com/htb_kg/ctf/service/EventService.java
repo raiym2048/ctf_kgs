@@ -29,4 +29,6 @@ public interface EventService {
     List<JeopardyResponse> hackerJoinedEvents(String token);
 
     JeopardyResponse getById(String token, Long eventId);
+
+    List<TaskResponse> searchByEventChallenges(String token, Long eventId, String seach);
 }

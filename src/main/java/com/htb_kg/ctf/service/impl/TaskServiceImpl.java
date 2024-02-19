@@ -425,6 +425,26 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.save(task);
     }
 
+    @Override
+    public List<TaskResponse> searchByChallenges(List<Task> challenges, Hacker hacker, String search) {
+        List<Task> searchedTasks = new ArrayList<>();
+
+        if (!search.matches(".*\\w.*")){
+            System.out.println("its an empty!");
+            searchedTasks= challenges;
+        }
+        else {
+            for (Task challenge : challenges) {
+                if (challenge.getName().toLowerCase().contains(search.toLowerCase()) ||
+                        challenge.getDescription().toLowerCase().contains(search.toLowerCase())) {
+                    searchedTasks.add(challenge);
+                }
+            }
+        }
+
+        return taskMapper.toDtoS(searchedTasks,hacker);
+    }
+
 
     private Task requestToEntity(TaskRequest taskRequest) {
         Task task = new Task();

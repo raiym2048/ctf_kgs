@@ -22,6 +22,9 @@ public class Event {
 
     private String key;
 
+    @OneToOne()
+    private FileData image;
+
     @ManyToOne()
     private EventType eventType;
 

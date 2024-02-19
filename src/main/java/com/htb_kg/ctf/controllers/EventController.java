@@ -63,6 +63,11 @@ public class EventController {
         return eventService.hackerJoinedEvents(token);
     }
 
+    @GetMapping("/{eventId}/challenges/search")
+    public List<TaskResponse> search(@RequestHeader("Authorization") String token, @PathVariable Long eventId, @RequestParam(required = false) String serach){
+        return eventService.searchByEventChallenges(token, eventId, serach);
+    }
+
 
 
 }

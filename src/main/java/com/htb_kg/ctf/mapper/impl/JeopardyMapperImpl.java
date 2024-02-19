@@ -5,7 +5,9 @@ import com.htb_kg.ctf.dto.event.jeopardy.JeopardyResponse;
 import com.htb_kg.ctf.entities.Event;
 import com.htb_kg.ctf.entities.Hacker;
 import com.htb_kg.ctf.entities.Jeopardy;
+import com.htb_kg.ctf.mapper.FileMapper;
 import com.htb_kg.ctf.mapper.JeopardyMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@AllArgsConstructor
 public class JeopardyMapperImpl implements JeopardyMapper {
+    private final FileMapper fileMapper;
 
     @Override
     public List<JeopardyResponse> toDtoS(List<Event> all) {
@@ -60,6 +64,10 @@ public class JeopardyMapperImpl implements JeopardyMapper {
         jeopardyResponse.setChallengesCount(jeopardy.getChallenges()!=null?jeopardy.getChallenges().size() : 0);
         jeopardyResponse.setPlayersJoined(jeopardy.getJoinedHackers()!=null?jeopardy.getJoinedHackers().size():0);
         jeopardyResponse.setTeamJoined(jeopardy.getJoinedTeams()!=null?jeopardy.getJoinedTeams().size():0);
+
+        if (jeopardy.getImage()!= null){
+            jeopardyResponse.setEventImage(fileMapper.toDto(jeopardy.getImage()));
+        }
         return jeopardyResponse;
     }
 
@@ -97,6 +105,10 @@ public class JeopardyMapperImpl implements JeopardyMapper {
         else {
             jeopardyResponse.setJoined(false);
 
+        }
+
+        if (jeopardy.getImage()!= null){
+            jeopardyResponse.setEventImage(fileMapper.toDto(jeopardy.getImage()));
         }
         return jeopardyResponse;
     }

@@ -179,6 +179,17 @@ public class EventServiceImpl implements EventService {
         return jeopardyMapper.toDto(event.get());
     }
 
+    @Override
+    public List<TaskResponse> searchByEventChallenges(String token, Long eventId, String search) {
+        User user = userService.getUsernameFromToken(token);
+        if (!user.getRole().equals(Role.HACKER))
+            throw new BadRequestException("only hackers can search challenges of event!");
+        Optional<Event> event = eventRepository.findById(eventId);
+        if (event.isEmpty())
+            throw new BadRequestException("not find event with id: "+eventId+"!");
+        return taskService.searchByChallenges(event.get().getChallenges(), user.getHacker(), search);
+    }
+
 
     private List<Task> findChallenges(List<Long> challengeIds) {
         List<Task> challenges = new ArrayList<>();
@@ -221,8 +232,9 @@ public class EventServiceImpl implements EventService {
         return eventStatus.get();
     }
 
-    @Scheduled(fixedRate = 60000) // this will run the method every 60 seconds
+    @Scheduled(fixedRate = 6000) // this will run the method every 60 seconds
     public void endEvent(){
+        System.out.println("its working every 6 second");
         LocalDateTime now = LocalDateTime.now();
 
         // Check for events that should be ended
@@ -230,10 +242,9 @@ public class EventServiceImpl implements EventService {
 
         // Close each event and update it in the database
         for (Event event : eventsToClose) {
-            event.setEventStatus(eventStatusRepository.findByTitle("closed").get()); // assuming you have a closed flag in your Event entity
+            event.setEventStatus(eventStatusRepository.findByTitle("past").get()); // assuming you have a closed flag in your Event entity
             eventRepository.save(event);
         }
-
     }
 
 }
