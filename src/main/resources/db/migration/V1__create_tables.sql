@@ -1,7 +1,7 @@
 
  create table category (id bigserial not null, name varchar(255), primary key (id))
     ; create table category_tasks (category_id bigint not null, tasks_id bigint not null unique)
-    ; create table event (end_date timestamp(6), event_format_id bigint, event_status_id bigint, event_type_id bigint, id bigserial not null, image_id bigint unique, location_id bigint, start_date timestamp(6), winner_id bigint, key varchar(255), title varchar(255), primary key (id))
+    ; create table event (description varchar(500), end_date timestamp(6), event_format_id bigint, event_status_id bigint, event_type_id bigint, id bigserial not null, image_id bigint unique, location_id bigint, start_date timestamp(6), winner_id bigint, key varchar(255), title varchar(255), primary key (id))
     ; create table event_challenges (challenges_id bigint not null unique, event_id bigint not null)
     ; create table event_joined_hackers (event_id bigint not null, joined_hackers_id bigint not null)
     ; create table event_joined_teams (event_id bigint not null, joined_teams_id bigint not null)

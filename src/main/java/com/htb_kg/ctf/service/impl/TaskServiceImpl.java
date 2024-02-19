@@ -91,8 +91,10 @@ public class TaskServiceImpl implements TaskService {
         Hacker hacker = user.getHacker();
 
         System.out.println("the size:"+answeredTasks.size());
+        List<TaskResponse> taskResponses = taskMapper.toDtoS(taskRepository.findAllByIsPrivate(false), answeredTasks, hacker);
+        System.out.println("the size of tasks for all:"+ taskResponses.size());
 
-        return taskMapper.toDtoS(taskRepository.findAllByIsPrivate(false), answeredTasks, hacker);
+        return taskResponses;
     }
 
     @Override

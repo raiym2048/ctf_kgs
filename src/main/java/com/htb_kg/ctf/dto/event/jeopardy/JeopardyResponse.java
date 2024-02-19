@@ -13,6 +13,7 @@ public class JeopardyResponse {
     private Long jeopardyId;
     private FileResponse eventImage;
     private String title;
+    private String description;
     private Boolean joined;
     private List<Integer> startDate;
     private List<Integer> endDate;

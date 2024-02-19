@@ -57,6 +57,7 @@ public class JeopardyMapperImpl implements JeopardyMapper {
         jeopardyResponse.setTitle(jeopardy.getTitle());
         jeopardyResponse.setStartDate(startedDateArray);
         jeopardyResponse.setEndDate(endDateArray);
+        jeopardyResponse.setDescription(jeopardy.getDescription());
         jeopardyResponse.setEventStatus(jeopardy.getEventStatus()!=null?jeopardy.getEventStatus().getTitle():"");
         jeopardyResponse.setEventFormat(jeopardy.getEventFormat()!=null?jeopardy.getEventFormat().getTitle():"");
         jeopardyResponse.setEventType(jeopardy.getEventType()!=null?jeopardy.getEventType().getTitle():"");
@@ -89,6 +90,7 @@ public class JeopardyMapperImpl implements JeopardyMapper {
 
         JeopardyResponse jeopardyResponse = new JeopardyResponse();
         jeopardyResponse.setJeopardyId(jeopardy.getId());
+        jeopardyResponse.setDescription(jeopardy.getDescription());
         jeopardyResponse.setTitle(jeopardy.getTitle());
         jeopardyResponse.setStartDate(startedDateArray);
         jeopardyResponse.setEndDate(endDateArray);

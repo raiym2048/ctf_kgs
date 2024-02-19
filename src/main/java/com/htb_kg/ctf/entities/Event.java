@@ -20,6 +20,8 @@ public class Event {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
+    private String description;
+
     private String key;
 
     @OneToOne()
