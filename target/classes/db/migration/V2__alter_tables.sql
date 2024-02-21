@@ -4,6 +4,7 @@
     ; alter table if exists event add constraint FKb0njhs42klt8pm7k9lhp4w1xs foreign key (event_format_id) references event_format
     ; alter table if exists event add constraint FK6esoabtbwawkgdx7wyx9sofr7 foreign key (event_status_id) references event_status
     ; alter table if exists event add constraint FKgxoo7ftgbsrwr4i27wb9ylu1 foreign key (event_type_id) references event_type
+    ; alter table if exists event add constraint FKh3m847v4sx73ppuli1php3nek foreign key (image_id) references file_data
     ; alter table if exists event add constraint FKbb6c0h5nhs5og47iem617ehrl foreign key (location_id) references location
     ; alter table if exists event add constraint FKsikoatv947rguilurkuq6l0qn foreign key (winner_id) references team
     ; alter table if exists event_challenges add constraint FKi75y6t6vy4xt8k0cd5h6kbxkv foreign key (challenges_id) references task
@@ -12,6 +13,11 @@
     ; alter table if exists event_joined_hackers add constraint FK7iujw9eqrf27lw4fljh4u4e7n foreign key (event_id) references event
     ; alter table if exists event_joined_teams add constraint FKjcwnnyjffl19p5lt74w9ckffh foreign key (joined_teams_id) references team
     ; alter table if exists event_joined_teams add constraint FKpvur52tcccr43a4cikevwyr2o foreign key (event_id) references event
+    ; alter table if exists event_score_board add constraint FKer3c39184qvuon332kawjy281 foreign key (event_id) references event
+    ; alter table if exists event_score_board add constraint FKayn6li5bodqw8nmmd6pdiaarh foreign key (hacker_id) references hacker_table
+    ; alter table if exists event_score_board add constraint FKtokfi4x7234hcv8dk1f5c07ox foreign key (team_id) references team
+    ; alter table if exists event_score_board_submitted_tasks add constraint FK7o33div6c4j6gwo9ox0iwf4xf foreign key (submitted_tasks_id) references task
+    ; alter table if exists event_score_board_submitted_tasks add constraint FKd5bofrcjt2y6l8d5k28thxc12 foreign key (event_score_board_id) references event_score_board
     ; alter table if exists hacker_table_answered_tasks add constraint FKprf7w5b5i051x1c6nkerkbkwv foreign key (answered_tasks_id) references task
     ; alter table if exists hacker_table_answered_tasks add constraint FKebu5chi6ldjvmodypmurl3j9e foreign key (hacker_id) references hacker_table
     ; alter table if exists hacker_table_favorites add constraint FKt65mhu1atmsmhab8v8aev2qb4 foreign key (favorites_id) references task

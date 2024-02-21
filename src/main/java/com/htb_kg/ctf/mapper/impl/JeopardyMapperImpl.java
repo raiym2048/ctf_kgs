@@ -1,17 +1,15 @@
 package com.htb_kg.ctf.mapper.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.htb_kg.ctf.dto.event.jeopardy.JeopardyResponse;
+import com.htb_kg.ctf.dto.rank.RankingResponse;
 import com.htb_kg.ctf.entities.Event;
+import com.htb_kg.ctf.entities.EventScoreBoard;
 import com.htb_kg.ctf.entities.Hacker;
-import com.htb_kg.ctf.entities.Jeopardy;
 import com.htb_kg.ctf.mapper.FileMapper;
 import com.htb_kg.ctf.mapper.JeopardyMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,5 +111,25 @@ public class JeopardyMapperImpl implements JeopardyMapper {
             jeopardyResponse.setEventImage(fileMapper.toDto(jeopardy.getImage()));
         }
         return jeopardyResponse;
+    }
+
+    @Override
+    public List<RankingResponse> toDtoSRanking(List<EventScoreBoard> allByIdOrderByPointAsc) {
+        List<RankingResponse> responses = new ArrayList<>();
+        for (EventScoreBoard eventScoreBoard: allByIdOrderByPointAsc){
+            responses.add(toDtoRanking(eventScoreBoard));
+        }
+        return responses;
+    }
+
+    @Override
+    public RankingResponse toDtoRanking(EventScoreBoard eventScoreBoard) {
+        RankingResponse response = new RankingResponse();
+        response.setPoints(eventScoreBoard.getPoint());
+        response.setNickname(eventScoreBoard.getHacker().getUser().getNickname());
+        if (eventScoreBoard.getHacker().getUser().getLogo_image()!=null){
+            response.setLogo_image(fileMapper.toDto(eventScoreBoard.getHacker().getUser().getLogo_image()));
+        }
+        return response;
     }
 }

@@ -2,6 +2,7 @@ package com.htb_kg.ctf.service.impl;
 
 import com.htb_kg.ctf.dto.event.jeopardy.JeopardyCreateRequest;
 import com.htb_kg.ctf.dto.event.jeopardy.JeopardyResponse;
+import com.htb_kg.ctf.dto.rank.RankingResponse;
 import com.htb_kg.ctf.dto.task.TaskResponse;
 import com.htb_kg.ctf.entities.*;
 import com.htb_kg.ctf.enums.Role;
@@ -10,10 +11,7 @@ import com.htb_kg.ctf.exception.BadRequestException;
 import com.htb_kg.ctf.mapper.JeopardyMapper;
 import com.htb_kg.ctf.repositories.LocationRepository;
 import com.htb_kg.ctf.repositories.TaskRepository;
-import com.htb_kg.ctf.repositories.event.EventFormatRepository;
-import com.htb_kg.ctf.repositories.event.EventRepository;
-import com.htb_kg.ctf.repositories.event.EventStatusRepository;
-import com.htb_kg.ctf.repositories.event.EventTypeRepository;
+import com.htb_kg.ctf.repositories.event.*;
 import com.htb_kg.ctf.service.EventService;
 import com.htb_kg.ctf.service.TaskService;
 import com.htb_kg.ctf.service.UserService;
@@ -26,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -40,6 +37,7 @@ public class EventServiceImpl implements EventService {
     private final TaskRepository taskRepository;
     private final JeopardyMapper jeopardyMapper;
     private final TaskService taskService;
+    private final EventScoreBoardRepository eventScoreBoardRepository;
 
     @Override
     public String create(JeopardyCreateRequest createRequest, String token) {
@@ -150,9 +148,25 @@ public class EventServiceImpl implements EventService {
         List<Hacker> joinedHackers = event.get().getJoinedHackers();
         if (joinedHackers.isEmpty())
             joinedHackers = new ArrayList<>();
-        joinedHackers.add(user.getHacker());
-        event.get().setJoinedHackers(joinedHackers);
+        if (!joinedHackers.contains(user.getHacker())){
+            joinedHackers.add(user.getHacker());
+            event.get().setJoinedHackers(joinedHackers);
+        }
         eventRepository.save(event.get());
+
+        eventScoreBoardSave(event.get(), user.getHacker());
+    }
+    @Override
+    public void eventScoreBoardSave(Event event, Hacker hacker) {
+        Optional<EventScoreBoard> eventScoreBoardOptional = eventScoreBoardRepository.findByEventAndHacker(event, hacker);
+        if (eventScoreBoardOptional.isEmpty()){
+            EventScoreBoard eventScoreBoard = new EventScoreBoard();
+            eventScoreBoard.setEvent(event);
+            eventScoreBoard.setPoint(0);
+            eventScoreBoard.setHacker(hacker);
+            eventScoreBoard.setSubmittedTasks(new ArrayList<>());
+            eventScoreBoardRepository.save(eventScoreBoard);
+        }
     }
 
     @Override
@@ -202,6 +216,16 @@ public class EventServiceImpl implements EventService {
         return taskService.searchByCategoryChallenges(event.get().getChallenges(), user.getHacker(), categoryName);
     }
 
+    @Override
+    public List<RankingResponse> rankingById(Long eventId) {
+        Optional<Event> event = eventRepository.findById(eventId);
+        if (event.isEmpty())
+            throw new BadRequestException("not find event with id: "+eventId+"!");
+
+
+        return jeopardyMapper.toDtoSRanking(eventScoreBoardRepository.findAllByIdOrderByPointAsc(eventId));
+    }
+
 
     private List<Task> findChallenges(List<Long> challengeIds) {
         List<Task> challenges = new ArrayList<>();
@@ -244,9 +268,9 @@ public class EventServiceImpl implements EventService {
         return eventStatus.get();
     }
 
-    @Scheduled(fixedRate = 600000) // this will run the method every 60 seconds
+    @Scheduled(fixedRate = 600000) // this will run the method every 600 seconds
     public void endEvent(){
-        System.out.println("its working every 6 second");
+        System.out.println("its working every 600 second");
         LocalDateTime now = LocalDateTime.now();
 
         // Check for events that should be ended

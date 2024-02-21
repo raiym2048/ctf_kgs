@@ -2,6 +2,7 @@ package com.htb_kg.ctf.controllers;
 
 import com.htb_kg.ctf.dto.event.jeopardy.JeopardyCreateRequest;
 import com.htb_kg.ctf.dto.event.jeopardy.JeopardyResponse;
+import com.htb_kg.ctf.dto.rank.RankingResponse;
 import com.htb_kg.ctf.dto.task.TaskResponse;
 import com.htb_kg.ctf.service.EventService;
 import lombok.RequiredArgsConstructor;
@@ -74,8 +75,8 @@ public class EventController {
         return eventService.searchByCategoryInEventChallenges(token, eventId, categoryName);
     }
 
-
-
-
-
+    @GetMapping("/scoreboard/{eventId}")
+    public List<RankingResponse> eventRanking(@PathVariable Long eventId){
+        return eventService.rankingById(eventId);
+    }
 }

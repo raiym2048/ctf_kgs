@@ -16,6 +16,8 @@ import com.htb_kg.ctf.repositories.TaskHackerHistoryRepository;
 import com.htb_kg.ctf.repositories.TaskRepository;
 import com.htb_kg.ctf.repositories.UserRepository;
 import com.htb_kg.ctf.repositories.event.EventRepository;
+import com.htb_kg.ctf.repositories.event.EventScoreBoardRepository;
+import com.htb_kg.ctf.service.EventService;
 import com.htb_kg.ctf.service.HackerService;
 import com.htb_kg.ctf.service.UserService;
 import lombok.AllArgsConstructor;
@@ -38,6 +40,8 @@ public class HackerServiceImpl implements HackerService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final HackerMapper hackerMapper;
+    private final EventScoreBoardRepository eventScoreBoardRepository;
+    private final EventService eventService;
     @Override
     public boolean answerToTask(String token, String answer, Long taskId) {
         Optional<Task> task = taskRepository.findById(taskId);
@@ -56,37 +60,87 @@ public class HackerServiceImpl implements HackerService {
                                 get().getTime()+
                     "!", HttpStatus.BAD_GATEWAY);
         if (task.get().getSubmitFlag().equals(answer)){
-            task.get().setUserSolves(task.get().getUserSolves()>0?task.get().getUserSolves()+1:1);
-
-
-            if (historyRepository.findHackerTaskAnswerHistoryByTaskIdAndHackerId(taskId,hacker.getId()).isEmpty()){
-                HackerTaskAnswerHistory history1 = new HackerTaskAnswerHistory();
-                history1.setTask(task.get());
-                history1.setHacker(hacker);
-                history1.setTime(LocalDateTime.now().toString());
-                historyRepository.save(history1);
+            if (!task.get().getIsPrivate()){
+                return answerToTaskIfPublic(task,taskId, hacker);
             }
             else {
-                throw new BadRequestException("hacker with id: "+hacker.getId()+" is already answered to the task with id: "+taskId+"!");
+                return answerToTaskIfPrivate(task.get(),hacker);
             }
 
-            hacker.setPoints(hacker.getPoints()==null?task.get().getPoints(): hacker.getPoints()+ task.get().getPoints());
-
-            if (task.get().getPoints()>100){
-                task.get().setPoints((int) (task.get().getPoints()*0.2));
-            }
-            taskRepository.save(task.get());
-
-            List<Task> answeredTasks = new ArrayList<>();
-            if (!hacker.getAnsweredTasks().isEmpty())
-                answeredTasks = hacker.getAnsweredTasks();
-            answeredTasks.add(task.get());
-            hacker.setAnsweredTasks(answeredTasks);
-            hackerRepository.save(hacker);
-            return true;
         }
 
         return false;
+    }
+
+    private Boolean answerToTaskIfPrivate(Task task, Hacker hacker) {
+        Optional<Event> event = eventRepository.findByChallengesContains(task);
+        if (event.isEmpty()){
+            throw new BadRequestException("the event is private, the hacker is trying answer to the task, it mean " +
+                    "this task is in event, but, why the task is not in event when we have two factor?!");
+        }
+        Optional<EventScoreBoard> eventScoreBoard = eventScoreBoardRepository.findByEventAndHacker(event.get(),hacker);
+        if (eventScoreBoard.isEmpty()){
+            createEventScoreBoard(event.get(),hacker, task);
+        }
+        else {
+            scoreEventScoreBoard(eventScoreBoard.get(), hacker, task);
+        }
+        return true;
+    }
+
+    private void scoreEventScoreBoard(EventScoreBoard eventScoreBoard, Hacker hacker, Task task) {
+        eventScoreBoard.setPoint(eventScoreBoard.getPoint() + task.getPoints());
+        task.setPoints((int) (task.getPoints() * 0.2));
+        taskRepository.save(task);
+        eventScoreBoardRepository.save(eventScoreBoard);
+
+    }
+
+    private void createEventScoreBoard(Event event, Hacker hacker, Task task) {
+        EventScoreBoard eventScoreBoard = new EventScoreBoard();
+        eventScoreBoard.setHacker(hacker);
+        eventScoreBoard.setEvent(event);
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(task);
+        eventScoreBoard.setSubmittedTasks(tasks);
+        eventScoreBoard.setPoint(task.getPoints());
+        task.setPoints((int) (task.getPoints() * 0.2));
+        taskRepository.save(task);
+        eventScoreBoardRepository.save(eventScoreBoard);
+    }
+
+    private Boolean answerToTaskIfPublic(Optional<Task> task,Long taskId,Hacker hacker ){
+        task.get().setUserSolves(task.get().getUserSolves()>0?task.get().getUserSolves()+1:1);
+
+
+        if (historyRepository.findHackerTaskAnswerHistoryByTaskIdAndHackerId(taskId,hacker.getId()).isEmpty()){
+            HackerTaskAnswerHistory history1 = new HackerTaskAnswerHistory();
+            history1.setTask(task.get());
+            history1.setHacker(hacker);
+            history1.setTime(LocalDateTime.now().toString());
+            historyRepository.save(history1);
+        }
+        else {
+            throw new BadRequestException("hacker with id: "+hacker.getId()+" is already answered to the task with id: "+taskId+"!");
+        }
+
+        hacker.setPoints(hacker.getPoints()==null?task.get().getPoints(): hacker.getPoints()+ task.get().getPoints());
+
+        if (task.get().getPoints()>100){
+            task.get().setPoints((int) (task.get().getPoints()*0.2));
+        }
+        taskRepository.save(task.get());
+
+        List<Task> answeredTasks = new ArrayList<>();
+        if (!hacker.getAnsweredTasks().isEmpty())
+            answeredTasks = hacker.getAnsweredTasks();
+        if (!answeredTasks.contains(task.get())){
+            answeredTasks.add(task.get());
+            hacker.setAnsweredTasks(answeredTasks);
+            hackerRepository.save(hacker);
+        }
+
+        return true;
     }
 
     @Override
