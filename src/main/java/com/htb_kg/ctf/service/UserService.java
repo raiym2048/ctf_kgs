@@ -9,6 +9,8 @@ import java.util.List;
 public interface UserService {
     User getUsernameFromToken(String token);
 
+    User nullableUserFromToken(String token);
+
     List<UserResponse> getAllUsers();
 
     void deleteUserById(Long userId);

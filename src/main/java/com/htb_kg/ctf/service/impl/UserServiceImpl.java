@@ -2,7 +2,6 @@ package com.htb_kg.ctf.service.impl;
 
 import com.htb_kg.ctf.dto.user.BusinessUserResponse;
 import com.htb_kg.ctf.dto.user.UserResponse;
-import com.htb_kg.ctf.entities.Hacker;
 import com.htb_kg.ctf.entities.Teacher;
 import com.htb_kg.ctf.entities.User;
 import com.htb_kg.ctf.enums.Role;
@@ -12,7 +11,6 @@ import com.htb_kg.ctf.repositories.FileRepository;
 import com.htb_kg.ctf.repositories.HackerRepository;
 import com.htb_kg.ctf.repositories.TeacherRepository;
 import com.htb_kg.ctf.repositories.UserRepository;
-import com.htb_kg.ctf.service.FileDataService;
 import com.htb_kg.ctf.service.UserService;
 import lombok.AllArgsConstructor;
 import net.minidev.json.JSONObject;
@@ -39,6 +37,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUsernameFromToken(String token) {
+
+        String[] chunks = token.substring(7).split("\\.");
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject object = null;
+        try {
+            object = (JSONObject) jsonParser.parse(decoder.decode(chunks[1]));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        return userRepository.findByEmail(String.valueOf(object.get("sub"))).orElseThrow(() -> new BadCredentialsException("No user in database with ur token! ReLogIn pls"));
+    }
+
+    @Override
+    public User nullableUserFromToken(String token) {
+        if (!token.contains("Bearer")){
+            return null;
+        }
 
         String[] chunks = token.substring(7).split("\\.");
         Base64.Decoder decoder = Base64.getUrlDecoder();

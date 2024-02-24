@@ -26,5 +26,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("SELECT e FROM Event e JOIN e.joinedHackers j WHERE j IN :hackers")
     List<Event> findEventsByJoinedHackers(@Param("hackers") List<Hacker> hackers);
 
+    List<Event> findAllEventByJoinedHackersContaining(Hacker hacker);
+
     Optional<Event> findByChallengesContains(Task task);
 }

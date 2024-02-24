@@ -56,6 +56,7 @@ public class EventController {
 
     @PostMapping("/join/{eventId}")
     public void joinToEvent(@PathVariable Long eventId, @RequestHeader("Authorization") String token){
+        System.out.println("\n\n\ncalling     @PostMapping(\"/join/{eventId}\")\n");
         eventService.joinHacker(eventId, token);
     }
 

@@ -139,6 +139,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void joinHacker(Long eventId, String token) {
+        System.out.println("\n\n\ncalling joined func");
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty())
             throw new BadRequestException("no event with id: "+ eventId+"!");
@@ -149,8 +150,13 @@ public class EventServiceImpl implements EventService {
         if (joinedHackers.isEmpty())
             joinedHackers = new ArrayList<>();
         if (!joinedHackers.contains(user.getHacker())){
+            System.out.println("\n\n\njoined successfully");
             joinedHackers.add(user.getHacker());
             event.get().setJoinedHackers(joinedHackers);
+        }
+        else {
+            System.out.println("\n\n\njoined already");
+
         }
         eventRepository.save(event.get());
 
@@ -176,21 +182,31 @@ public class EventServiceImpl implements EventService {
             throw new BadRequestException("only hackers can view their joined events!");
         List<Hacker> hackers = new ArrayList<>();
         hackers.add(user.getHacker());
-        List<Event> hackerJoinedEvents = eventRepository.findEventsByJoinedHackers(hackers);
+        List<Event> hackerJoinedEvents = eventRepository.findAllEventByJoinedHackersContaining(user.getHacker());
+        if (hackerJoinedEvents.isEmpty()){
+            System.out.println("\n\n\nthe list is empty!");
+        }
+        else {
+            System.out.println("the size of the list: " + hackerJoinedEvents.size());
+        }
 
         return jeopardyMapper.toDtoS(hackerJoinedEvents);
     }
 
     @Override
     public JeopardyResponse getById(String token, Long eventId) {
-        User user = userService.getUsernameFromToken(token);
-        if (!user.getRole().equals(Role.HACKER))
-            throw new BadRequestException("only hackers can view event!");
+        User user = userService.nullableUserFromToken(token);
+
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty())
             throw new BadRequestException("no event with id: "+eventId+"!");
+        if (user==null){
+            jeopardyMapper.toDto(event.get());
+        }
+        if (!user.getRole().equals(Role.HACKER))
+            throw new BadRequestException("only hackers can view event!");
 
-        return jeopardyMapper.toDto(event.get());
+        return jeopardyMapper.toDto(event.get(), user.getHacker());
     }
 
     @Override
