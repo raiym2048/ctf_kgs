@@ -10,8 +10,10 @@ import com.htb_kg.ctf.mapper.JeopardyMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Component
 @AllArgsConstructor
@@ -36,24 +38,36 @@ public class JeopardyMapperImpl implements JeopardyMapper {
 
     @Override
     public JeopardyResponse toDto(Event jeopardy) {
-        List<Integer> startedDateArray = new ArrayList<>();
-        startedDateArray.add(jeopardy.getStartDate().getYear());
-        startedDateArray.add(jeopardy.getStartDate().getDayOfMonth());
-        startedDateArray.add(jeopardy.getStartDate().getMonthValue());
-        startedDateArray.add(jeopardy.getStartDate().getHour());
-        startedDateArray.add(jeopardy.getStartDate().getMinute());
+        List<Object> startDateArray = new ArrayList<>();
+        startDateArray.add(jeopardy.getStartDate().getYear());
+        startDateArray.add(jeopardy.getStartDate().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH));
+        startDateArray.add(jeopardy.getStartDate().getDayOfMonth());
+        startDateArray.add(jeopardy.getStartDate().getHour());
+        if (jeopardy.getStartDate().getMinute()< 9){
+            startDateArray.add("0"+jeopardy.getStartDate().getMinute());
+        }
+        else {
+            startDateArray.add(jeopardy.getStartDate().getMinute());
 
-        List<Integer> endDateArray = new ArrayList<>();
+        }
+        List<Object> endDateArray = new ArrayList<>();
         endDateArray.add(jeopardy.getEndDate().getYear());
+        endDateArray.add(jeopardy.getEndDate().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH));
         endDateArray.add(jeopardy.getEndDate().getDayOfMonth());
-        endDateArray.add(jeopardy.getEndDate().getMonthValue());
         endDateArray.add(jeopardy.getEndDate().getHour());
-        endDateArray.add(jeopardy.getEndDate().getMinute());
-
+        if (jeopardy.getEndDate().getMinute()< 9){
+            System.out.println("its true");
+            endDateArray.add("0"+jeopardy.getEndDate().getMinute());
+            System.out.println("0" + jeopardy.getEndDate().getMinute());
+        }
+        else {
+            System.out.println("yts false");
+            endDateArray.add(jeopardy.getEndDate().getMinute());
+        }
         JeopardyResponse jeopardyResponse = new JeopardyResponse();
         jeopardyResponse.setJeopardyId(jeopardy.getId());
         jeopardyResponse.setTitle(jeopardy.getTitle());
-        jeopardyResponse.setStartDate(startedDateArray);
+        jeopardyResponse.setStartDate(startDateArray);
         jeopardyResponse.setEndDate(endDateArray);
         jeopardyResponse.setDescription(jeopardy.getDescription());
         jeopardyResponse.setEventStatus(jeopardy.getEventStatus()!=null?jeopardy.getEventStatus().getTitle():"");
@@ -72,25 +86,39 @@ public class JeopardyMapperImpl implements JeopardyMapper {
 
     @Override
     public JeopardyResponse toDto(Event jeopardy, Hacker hacker) {
-        List<Integer> startedDateArray = new ArrayList<>();
-        startedDateArray.add(jeopardy.getStartDate().getYear());
-        startedDateArray.add(jeopardy.getStartDate().getDayOfMonth());
-        startedDateArray.add(jeopardy.getStartDate().getMonthValue());
-        startedDateArray.add(jeopardy.getStartDate().getHour());
-        startedDateArray.add(jeopardy.getStartDate().getMinute());
+        List<Object> startDateArray = new ArrayList<>();
+        startDateArray.add(jeopardy.getStartDate().getYear());
+        startDateArray.add(jeopardy.getStartDate().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH));
+        startDateArray.add(jeopardy.getStartDate().getDayOfMonth());
+        startDateArray.add(jeopardy.getStartDate().getHour());
+        if (jeopardy.getStartDate().getMinute()< 9){
+            startDateArray.add("0"+jeopardy.getStartDate().getMinute());
+        }
+        else {
+            startDateArray.add(jeopardy.getStartDate().getMinute());
 
-        List<Integer> endDateArray = new ArrayList<>();
+        }
+        List<Object> endDateArray = new ArrayList<>();
         endDateArray.add(jeopardy.getEndDate().getYear());
+        endDateArray.add(jeopardy.getEndDate().getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH));
         endDateArray.add(jeopardy.getEndDate().getDayOfMonth());
-        endDateArray.add(jeopardy.getEndDate().getMonthValue());
         endDateArray.add(jeopardy.getEndDate().getHour());
-        endDateArray.add(jeopardy.getEndDate().getMinute());
+        if (jeopardy.getEndDate().getMinute()< 9){
+            System.out.println("its true");
+            endDateArray.add("0"+jeopardy.getEndDate().getMinute());
+            System.out.println("0" + jeopardy.getEndDate().getMinute());
+        }
+        else {
+            System.out.println("yts false");
+            endDateArray.add(jeopardy.getEndDate().getMinute());
+        }
+
 
         JeopardyResponse jeopardyResponse = new JeopardyResponse();
         jeopardyResponse.setJeopardyId(jeopardy.getId());
         jeopardyResponse.setDescription(jeopardy.getDescription());
         jeopardyResponse.setTitle(jeopardy.getTitle());
-        jeopardyResponse.setStartDate(startedDateArray);
+        jeopardyResponse.setStartDate(startDateArray);
         jeopardyResponse.setEndDate(endDateArray);
         jeopardyResponse.setEventStatus(jeopardy.getEventStatus()!=null?jeopardy.getEventStatus().getTitle():"");
         jeopardyResponse.setEventFormat(jeopardy.getEventFormat()!=null?jeopardy.getEventFormat().getTitle():"");

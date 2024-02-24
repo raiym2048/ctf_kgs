@@ -11,6 +11,7 @@ import com.htb_kg.ctf.exception.BadRequestException;
 import com.htb_kg.ctf.mapper.JeopardyMapper;
 import com.htb_kg.ctf.repositories.LocationRepository;
 import com.htb_kg.ctf.repositories.TaskRepository;
+import com.htb_kg.ctf.repositories.UserRepository;
 import com.htb_kg.ctf.repositories.event.*;
 import com.htb_kg.ctf.service.EventService;
 import com.htb_kg.ctf.service.TaskService;
@@ -38,6 +39,7 @@ public class EventServiceImpl implements EventService {
     private final JeopardyMapper jeopardyMapper;
     private final TaskService taskService;
     private final EventScoreBoardRepository eventScoreBoardRepository;
+    private final UserRepository userRepository;
 
     @Override
     public String create(JeopardyCreateRequest createRequest, String token) {
@@ -284,19 +286,32 @@ public class EventServiceImpl implements EventService {
         return eventStatus.get();
     }
 
-    @Scheduled(fixedRate = 600000) // this will run the method every 600 seconds
+    // 6, 000 0 is 1 minute
+    // 6, 000 is 6 seconds
+    @Scheduled(fixedRate = 6000) // this will run the method every 600 seconds
     public void endEvent(){
-        System.out.println("its working every 600 second");
+
+        System.out.println("its working every 6 second");
         LocalDateTime now = LocalDateTime.now();
 
         // Check for events that should be ended
-        List<Event> eventsToClose = eventRepository.findAllByEndDateBefore(now);
+        List<Event> all = eventRepository.findAll();
 
         // Close each event and update it in the database
-        for (Event event : eventsToClose) {
-            event.setEventStatus(eventStatusRepository.findByTitle("past").get()); // assuming you have a closed flag in your Event entity
+        for (Event event : all) {
+            if (event.getEndDate().isBefore(now)) {
+                System.out.println("past");
+                event.setEventStatus(eventStatusRepository.findByTitle("past").get());
+            } else if (event.getStartDate().isAfter(now)) {
+                System.out.println("upcoming");
+                event.setEventStatus(eventStatusRepository.findByTitle("upcoming").get());
+            } else if (event.getStartDate().isBefore(now) && event.getEndDate().isAfter(now)) {
+                System.out.println("ongoing");
+                event.setEventStatus(eventStatusRepository.findByTitle("ongoing").get());
+            }
             eventRepository.save(event);
         }
+
     }
 
 }

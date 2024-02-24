@@ -15,8 +15,8 @@ public class JeopardyResponse {
     private String title;
     private String description;
     private Boolean joined;
-    private List<Integer> startDate;
-    private List<Integer> endDate;
+    private List<Object> startDate;
+    private List<Object> endDate;
     private String eventStatus;
     private String eventType;
     private String eventFormat;
