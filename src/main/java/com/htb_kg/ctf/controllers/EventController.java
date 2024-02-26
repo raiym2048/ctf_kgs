@@ -1,9 +1,11 @@
 package com.htb_kg.ctf.controllers;
 
+import com.htb_kg.ctf.dto.event.EventScoreBoardResponse;
 import com.htb_kg.ctf.dto.event.jeopardy.JeopardyCreateRequest;
 import com.htb_kg.ctf.dto.event.jeopardy.JeopardyResponse;
 import com.htb_kg.ctf.dto.rank.RankingResponse;
 import com.htb_kg.ctf.dto.task.TaskResponse;
+import com.htb_kg.ctf.entities.EventScoreBoard;
 import com.htb_kg.ctf.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +37,8 @@ public class EventController {
     public List<TaskResponse> eventTasks(@PathVariable Long eventId, @RequestHeader("Authorization") String token){
         return eventService.eventTasks(eventId, token);
     }
+
+
 
     @GetMapping("/past")
     public List<JeopardyResponse> pastEvents(@RequestHeader("Authorization") String token){
@@ -77,7 +81,7 @@ public class EventController {
     }
 
     @GetMapping("/scoreboard/{eventId}")
-    public List<RankingResponse> eventRanking(@PathVariable Long eventId){
+    public EventScoreBoardResponse eventRanking(@PathVariable Long eventId){
         return eventService.rankingById(eventId);
     }
 }

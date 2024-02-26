@@ -5,10 +5,7 @@ import com.htb_kg.ctf.dto.task.HintResponse;
 import com.htb_kg.ctf.dto.task.LikeResponse;
 import com.htb_kg.ctf.dto.task.TaskRequest;
 import com.htb_kg.ctf.dto.task.TaskResponse;
-import com.htb_kg.ctf.entities.Hacker;
-import com.htb_kg.ctf.entities.HackerTaskAnswerHistory;
-import com.htb_kg.ctf.entities.Hint;
-import com.htb_kg.ctf.entities.Task;
+import com.htb_kg.ctf.entities.*;
 
 import java.util.List;
 
@@ -30,4 +27,6 @@ public interface TaskMapper {
     List<HintResponse> getHackerHints(Hacker hacker, Task task);
 
     List<HintTexts> getHintText(Hacker hacker, Task task);
+
+    List<TaskResponse> toDtoSEventtasks(Event event, Hacker hacker);
 }

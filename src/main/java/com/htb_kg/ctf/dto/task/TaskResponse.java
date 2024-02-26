@@ -11,6 +11,8 @@ import java.util.List;
 public class TaskResponse {
     private Long id;
 
+    private String eventName;
+
     private String name;
     private String description;
     private String levelName;

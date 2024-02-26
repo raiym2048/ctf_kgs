@@ -352,7 +352,7 @@ public class TaskServiceImpl implements TaskService {
         if (event.isEmpty())
             throw new NotFoundException("no event with id: "+eventId+"!", HttpStatus.BAD_REQUEST);
 
-        List<TaskResponse> taskResponses =  taskMapper.toDtoS(event.get().getChallenges(), hacker);
+        List<TaskResponse> taskResponses =  taskMapper.toDtoSEventtasks(event.get(), hacker);
         System.out.println("\n\n\nthe size of tasks in the event: "+event.get().getChallenges().size());
         System.out.println("\n\n\n the size of taskresponse for event all tasks: " + taskResponses.size());
         return taskResponses;

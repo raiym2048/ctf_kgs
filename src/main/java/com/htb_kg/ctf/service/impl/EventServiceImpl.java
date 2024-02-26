@@ -1,5 +1,6 @@
 package com.htb_kg.ctf.service.impl;
 
+import com.htb_kg.ctf.dto.event.EventScoreBoardResponse;
 import com.htb_kg.ctf.dto.event.jeopardy.JeopardyCreateRequest;
 import com.htb_kg.ctf.dto.event.jeopardy.JeopardyResponse;
 import com.htb_kg.ctf.dto.rank.RankingResponse;
@@ -235,13 +236,15 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<RankingResponse> rankingById(Long eventId) {
+    public EventScoreBoardResponse rankingById(Long eventId) {
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty())
             throw new BadRequestException("not find event with id: "+eventId+"!");
 
-
-        return jeopardyMapper.toDtoSRanking(eventScoreBoardRepository.findAllByIdOrderByPointAsc(eventId));
+        EventScoreBoardResponse response = new EventScoreBoardResponse();
+        response.setEventName(event.get().getTitle());
+        response.setRankingResponses(jeopardyMapper.toDtoSRanking(eventScoreBoardRepository.findAllByIdOrderByPointAsc(eventId)));
+        return response;
     }
 
 

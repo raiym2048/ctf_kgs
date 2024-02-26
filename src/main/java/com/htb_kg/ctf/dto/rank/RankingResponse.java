@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class RankingResponse {
+    private String eventName;
 
     private Long userId;
     private FileResponse logo_image;

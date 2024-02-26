@@ -4,10 +4,7 @@ import com.htb_kg.ctf.dto.hint.HintTexts;
 import com.htb_kg.ctf.dto.task.HintResponse;
 import com.htb_kg.ctf.dto.task.LikeResponse;
 import com.htb_kg.ctf.dto.task.TaskResponse;
-import com.htb_kg.ctf.entities.Hacker;
-import com.htb_kg.ctf.entities.Hint;
-import com.htb_kg.ctf.entities.OpenedHints;
-import com.htb_kg.ctf.entities.Task;
+import com.htb_kg.ctf.entities.*;
 import com.htb_kg.ctf.mapper.FileMapper;
 import com.htb_kg.ctf.mapper.TaskMapper;
 import com.htb_kg.ctf.repositories.OpenedHintsRepository;
@@ -236,6 +233,77 @@ public class TaskMapperImpl implements TaskMapper {
 
         return openedHintsToHintTexts(openedHints);
     }
+
+    @Override
+    public List<TaskResponse> toDtoSEventtasks(Event event, Hacker hacker) {
+
+        List<TaskResponse> taskResponses = new ArrayList<>();
+
+        for (Task task: event.getChallenges()){
+            LikeResponse likeResponse = new LikeResponse();
+            if (task.getLikedHackers().contains(hacker)){
+                likeResponse.setLike(true);
+                likeResponse.setDisLike(false);
+            } else if (task.getDislikedHackers().contains(hacker)) {
+                likeResponse.setLike(false);
+                likeResponse.setDisLike(true);
+            }
+            else {
+                likeResponse.setLike(false);
+                likeResponse.setDisLike(false);
+            }
+            if (hacker.getFavorites().contains(task)){
+                taskResponses.add(toDtoEventTask(event, task, false,likeResponse, true, hacker));
+            }
+            else {
+                taskResponses.add(toDto(task, false,likeResponse, false, hacker));
+
+            }
+
+
+        }
+        return taskResponses;
+    }
+
+    private TaskResponse toDtoEventTask(Event event,Task task, Boolean b, LikeResponse likeResponse, Boolean onFavorite, Hacker hacker) {
+        TaskResponse taskResponse = new TaskResponse();
+        taskResponse.setId(task.getId());
+        taskResponse.setTaskCreator(task.getTaskCreator());
+        taskResponse.setName(task.getName());
+        taskResponse.setDescription(task.getDescription());
+        taskResponse.setPoints(task.getPoints());
+        taskResponse.setReleaseDate(task.getReleaseDate());
+        taskResponse.setSubmitFlag(task.getSubmitFlag());
+        taskResponse.setUserSolves(task.getUserSolves());
+        taskResponse.setCountLike(task.getLikedHackers().size());
+        taskResponse.setLikeResponse(likeResponse);
+        taskResponse.setCountDislike(task.getDislikedHackers().size());
+        taskResponse.setCategoryName(task.getCategory()!=null? task.getCategory().getName():null);
+        taskResponse.setLevelName(task.getLevel()!=null? task.getLevel().getName(): null);
+        taskResponse.setDownloadFile(task.getDownloadFile()!=null?fileMapper.toDto(task.getDownloadFile()):null);
+        if (!hacker.getAnsweredTasks().contains(task)){
+            System.out.println("its false\n\n\n");
+            taskResponse.setIsSolved(false);
+        }else {
+            System.out.println("its true\n\n\n");
+            taskResponse.setIsSolved(true);
+        }
+        taskResponse.setEventName(event.getTitle());
+
+//        taskResponse.setHintResponse(hintMapper.toResponses(task.getHints()));
+//        if (task.getHints()!=null){
+//            if (!task.getHints().isEmpty()){
+//                taskResponse.setHintText(task.getHints().get(0).getTitle());
+//
+//            }
+//        }
+        taskResponse.setOnFavorite(onFavorite);
+
+
+        return taskResponse;
+
+    }
+
     private List<HintTexts> openedHintsToHintTexts(List<OpenedHints> openedHints) {
         List<HintTexts> hintTexts = new ArrayList<>();
         for (OpenedHints openedHints1: openedHints){

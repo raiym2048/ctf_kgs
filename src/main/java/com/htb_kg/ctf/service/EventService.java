@@ -1,5 +1,6 @@
 package com.htb_kg.ctf.service;
 
+import com.htb_kg.ctf.dto.event.EventScoreBoardResponse;
 import com.htb_kg.ctf.dto.event.jeopardy.JeopardyCreateRequest;
 import com.htb_kg.ctf.dto.event.jeopardy.JeopardyResponse;
 import com.htb_kg.ctf.dto.rank.RankingResponse;
@@ -39,5 +40,5 @@ public interface EventService {
 
     List<TaskResponse> searchByCategoryInEventChallenges(String token, Long eventId, String categoryName);
 
-    List<RankingResponse> rankingById(Long eventId);
+    EventScoreBoardResponse rankingById(Long eventId);
 }
