@@ -299,6 +299,9 @@ public class TaskServiceImpl implements TaskService {
             openedHints.setHacker(hacker);
             openedHints.setTask(taskRepository.findByHintsIdAndIsPrivate(id, false).orElseThrow());
             openedHintsRepository.save(openedHints);
+            if (user.getHacker().getPoints()< 10){
+                throw new BadRequestException("hacker's points is over than 10. He can not open the hint!");
+            }
             user.getHacker().setPoints(user.getHacker().getPoints()-10);
             userRepository.save(user);
 
