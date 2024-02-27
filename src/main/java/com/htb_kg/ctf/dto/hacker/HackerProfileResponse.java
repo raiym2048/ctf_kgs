@@ -17,4 +17,6 @@ public class HackerProfileResponse {
     private Integer solvedTaskCount;
     private List<TaskResponse> favorites;
     private List<TaskResponse> solvedTasks;
+    private String logoLetter;
+    private String color;
 }

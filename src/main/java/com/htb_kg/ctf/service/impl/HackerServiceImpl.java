@@ -28,6 +28,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @AllArgsConstructor
@@ -186,7 +187,21 @@ public class HackerServiceImpl implements HackerService {
     public HackerProfileResponse getById(String token) {
         User user = userService.getUsernameFromToken(token);
         Hacker hacker = user.getHacker();
-        return hackerMapper.toProfileDto(hacker);
+
+        HackerProfileResponse response = hackerMapper.toProfileDto(hacker);
+        String logoLetter = user.getNickname().substring(0,1).toUpperCase();
+        if (user.getNickname().length()> 2)
+            logoLetter = user.getNickname().substring(0,2).toUpperCase();
+        String[] colors = {"#FFD1DC","#EFA94A" , "#7FB5B5","#5D9B9B", "#77DD77", "#FF7514", "#FF9BAA"};
+        response.setLogoLetter(logoLetter);
+        response.setColor(colors[randomColor(colors.length)]);
+        return response;
+    }
+    private int randomColor(int length) {
+        Random random = new Random();
+
+        // Next int will generate a number between 0 (inclusive) and 7 (exclusive)
+        return random.nextInt(length);
     }
 }
 //eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJhdXRoIjp7ImF1dGhvcml0eSI6IkhBQ0tFUiJ9LCJpYXQiOjE3MDM3NTYwMDAsImV4cCI6MTcwNDA1NjAwMH0.68pkfCfCDPrLti0QgTxH8z-dJhblJSVUbf_gB7EZ1qU
